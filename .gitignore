@@ -6,7 +6,7 @@ env/
 # Archivos de Python / Caché
 __pycache__/
 *.py[cod]
-*$py.class
+*.class
 
 # Base de datos local
 db.sqlite3
