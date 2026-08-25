@@ -1,0 +1,25 @@
+# Entorno Virtual
+venv/
+.venv/
+env/
+
+# Archivos de Python / Caché
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de datos local
+db.sqlite3
+*.sqlite3
+
+# IDE / Editores (PyCharm y VS Code)
+.idea/
+.vscode/
+*.swp
+
+# Archivos de entorno y logs
+.env
+*.log
+
+# Archivos estáticos recolectados
+staticfiles/
