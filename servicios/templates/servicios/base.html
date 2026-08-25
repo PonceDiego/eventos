@@ -1,0 +1,27 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Eventos - Servicios</title>
+  {% bootstrap_css %}
+</head>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{% url 'servicios:listar' %}">Eventos App</a>
+      <div>
+        <a class="btn btn-outline-light me-2" href="{% url 'servicios:listar' %}">Servicios Activos</a>
+        <a class="btn btn-outline-warning" href="{% url 'servicios:inactivos' %}">Papelera / Inactivos</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% bootstrap_javascript %}
+</body>
+</html>

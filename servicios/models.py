@@ -1,12 +1,11 @@
 from django.db import models
 
 # Create your models here.
-class Servicios(models.Model):
+class Servicio(models.Model):
     nombre = models.CharField('Nombre', max_length=100)
     descripcion = models.TextField('Descripcion')
     precio = models.DecimalField('Precio', max_digits=10, decimal_places=2)
     activo = models.BooleanField('Activo', default=True)
-    creado_el = models.DateTimeField('Fecha de creacion', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Servicio'
