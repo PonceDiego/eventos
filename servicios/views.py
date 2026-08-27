@@ -1,9 +1,12 @@
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from .models import Servicio ,Cliente
 
 
+# Landing Page
+def home(request):
+    return render(request, 'home.html')
 
 # Views de listas
 
@@ -14,6 +17,10 @@ class ServicioListView(ListView):
     context_object_name = 'servicios'
     def get_queryset(self):
         return Servicio.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
     
 class ClienteListView(ListView):
     model = Cliente
@@ -21,23 +28,35 @@ class ClienteListView(ListView):
     context_object_name = 'clientes'
     def get_queryset(self):
         return Cliente.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
 
 # Listar inactivos
 class ServicioInactivosListView(ListView):
     model = Servicio
-    template_name = 'servicios/inactivos.html'
+    template_name = 'servicios/listar_servicios.html'
     context_object_name = 'servicios'
 
     def get_queryset(self):
         return Servicio.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
 
 class ClienteInactivoListView(ListView):
     model = Cliente
-    template_name = 'servicios/clientes_inactivos.html'
+    template_name = 'servicios/lista_clientes.html'
     context_object_name = 'clientes'
 
     def get_queryset(self):
         return Cliente.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
 
 # Views de creación, edición, eliminación y restauración
 
