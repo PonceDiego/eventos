@@ -1,0 +1,36 @@
+{% extends 'servicios/clientebase.html' %}
+
+{% block content %}
+<h2 class="mb-3 text-secondary">Clientes Inactivos</h2>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-secondary">
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in clientes %}
+        <tr>
+          <td class="fw-semibold text-muted">{{ c.nombre}}</td>
+          <td class="text-muted">{{ c.apellido }}</td>
+          <td class="text-end">
+            <form action="{% url 'servicios:cliente_restaurar' c.pk %}" method="POST" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center py-4 text-muted">No hay clientes dados de baja.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

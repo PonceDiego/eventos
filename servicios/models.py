@@ -14,8 +14,19 @@ class Servicio(models.Model):
     def __str__(self):
         return self.nombre
 
-class Clientes(models.Model):
-    pass
+class Cliente(models.Model):
+    nombre= models.CharField('Nombre' , max_length=50)
+    apellido = models.CharField("Apellido" , max_length=50)
+    contacto = models.CharField('contacto' , max_length= 50 , default= '')
+    activo = models.BooleanField('Activo' , default=True)
+
+    class Meta:
+        verbose_name = 'Cliente'
+        verbose_name_plural  = 'Clientes'
+
+    def __str__(self) :
+        return f'{self.nombre} {self.apellido}'
+
 
 class Coordinadores(models.Model):
     pass

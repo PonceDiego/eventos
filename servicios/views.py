@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
-from .models import Servicio
+from .models import Servicio ,Cliente
+
 
 
 # Views de listas
@@ -55,3 +56,49 @@ class ServicioRestaurarView(View):
         servicio.activo = True
         servicio.save()
         return redirect('servicios:inactivos')
+
+
+
+class ClienteListView(ListView):
+    model = Cliente
+    template_name = 'servicios/lista_clientes.html'
+    context_object_name = 'clientes'
+    def get_queryset(self):
+        return Cliente.objects.filter(activo=True)
+
+
+class ClienteInactivoListView(ListView):
+    model = Cliente
+    template_name = 'servicios/clientes_inactivos.html'
+    context_object_name = 'clientes'
+
+    def get_queryset(self):
+        return Cliente.objects.filter(activo=False)
+
+
+class ClienteCreateView(CreateView):
+    model = Cliente
+    template_name = 'servicios/formcliente.html'
+    fields = ['nombre' , 'apellido' , 'contacto']
+    success_url = reverse_lazy('servicios:lista_cliente')
+
+
+class ClienteUpdateView(UpdateView):
+    model = Cliente
+    template_name = 'servicios/formcliente.html'
+    fields = ['nombre' , 'apellido' , 'activo']
+    success_url = reverse_lazy('servicios:lista_cliente')
+
+class ClienteBajaLogicaView(View):
+    def post(self , request , pk):
+        cliente = get_object_or_404(Cliente , pk = pk)
+        cliente.activo = False
+        cliente.save()
+        return redirect('servicios:lista_cliente')
+
+class ClienteRestaurarView(View):
+    def post(self , request , pk):
+        cliente = get_object_or_404(Cliente , pk = pk)
+        cliente.activo = True
+        cliente.save()
+        return redirect('servicios:cliente_inactivo')
