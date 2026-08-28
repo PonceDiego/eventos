@@ -3,20 +3,29 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Eventos - Servicios</title>
+  <title>Eventos - {% block title %}{% endblock %}</title>
   {% bootstrap_css %}
 </head>
 <body class="bg-light">
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{% url 'servicios:listar' %}">Eventos App</a>
-      <div>
-        <a class="btn btn-outline-light me-2" href="{% url 'servicios:listar' %}">Servicios Activos</a>
-        <a class="btn btn-outline-warning" href="{% url 'servicios:inactivos' %}">Papelera / Inactivos</a>
-      </div>
-    </div>
-  </nav>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">EventosApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:listar' %}">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_cliente' %}">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Coordinadores/Empleados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Reservas</a></li>
+                    <li class="nav-item"><a class="nav-link text-warning" href="/admin/">Django Admin</a></li>
+                    <li class="nav-item"><a class="nav-link text-info" href="#">API Docs</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
   <div class="container">
     {% block content %}{% endblock %}

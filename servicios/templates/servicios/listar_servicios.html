@@ -1,43 +1,73 @@
 {% extends 'servicios/base.html' %}
 
+{% block title %}Servicios {% endblock %}
+
 {% block content %}
+{% url 'servicios:inactivos' as url_inactivos %}
+{% url 'servicios:listar' as url_activos %}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>Servicios Activos</h2>
-  <a href="{% url 'servicios:crear' %}" class="btn btn-primary">+ Nuevo Servicio</a>
+    <h2>Servicios {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
+    
+    <div class="d-flex align-items-center gap-3">
+        <div class="form-check form-switch m-0">
+            <input class="form-check-input" 
+                   type="checkbox" 
+                   role="switch" 
+                   id="switchInactivos" 
+                   {% if es_inactivo %}checked{% endif %}
+                   onchange="location.href = this.checked ? '{{ url_inactivos }}' : '{{ url_activos }}';">
+            <label class="form-check-label fw-bold" for="switchInactivos">
+                Inactivos
+            </label>
+        </div>
+
+        <a href="{% url 'servicios:crear' %}" class="btn btn-primary">+ Nuevo Servicio</a>
+    </div>
 </div>
 
 <div class="card shadow-sm border-0">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0 align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Precio</th>
-          <th class="text-end">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for s in servicios %}
-        <tr>
-          <td class="fw-semibold">{{ s.nombre }}</td>
-          <td>{{ s.descripcion }}</td>
-          <td>${{ s.precio }}</td>
-          <td class="text-end">
-            <a href="{% url 'servicios:editar' s.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
-            <form action="{% url 'servicios:eliminar' s.pk %}" method="POST" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="text-center py-4 text-muted">No hay servicios activos.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in servicios %}
+                <tr>
+                    <td class="fw-semibold">{{ s.nombre }}</td>
+                    <td>{{ s.descripcion }}</td>
+                    <td>${{ s.precio }}</td>
+                    <td class="text-end">
+                      {% if es_inactivo %}
+                      <form action="{% url 'servicios:restaurar' s.pk %}" method="POST" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
+
+                      </form>
+                      {% else %}
+                        <a href="{% url 'servicios:editar' s.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
+                        <form action="{% url 'servicios:eliminar' s.pk %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-muted">
+                        No hay servicios {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
