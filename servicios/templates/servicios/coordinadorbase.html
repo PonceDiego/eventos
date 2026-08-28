@@ -1,0 +1,27 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Eventos - Coordinadores</title>
+  {% bootstrap_css %}
+</head>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{% url 'servicios:lista_coordinador' %}">Eventos App</a>
+      <div>
+        <a class="btn btn-outline-light me-2" href="{% url 'servicios:lista_coordinador' %}">Coordinador Activos</a>
+        <a class="btn btn-outline-warning" href="{% url 'servicios:coordinador_inactivo' %}">Papelera / Inactivos</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% bootstrap_javascript %}
+</body>
+</html>

@@ -28,11 +28,33 @@ class Cliente(models.Model):
         return f'{self.nombre} {self.apellido}'
 
 
-class Coordinadores(models.Model):
-    pass
+class Coordinador(models.Model):
+    nombre = models.CharField('Nombre', max_length=50)
+    apellido = models.CharField("Apellido", max_length=50)
+    dni = models.IntegerField('Dni' )
+    fecha_alta = models.DateTimeField('Fecha_Alta' , auto_now_add=True)
+    activo = models.BooleanField('Activo', default=True)
 
-class Empleados(models.Model):
-    pass
+    class Meta:
+        verbose_name = 'Coordinador'
+        verbose_name_plural  = 'coordinadores'
+
+    def __str__(self) :
+        return f'{self.nombre} {self.apellido}'
+
+
+class Empleado(models.Model):
+    nombre = models.CharField('Nombre' , max_length=50)
+    apellido = models.CharField('Apellido' , max_length=50)
+    legajo = models.IntegerField('Legajo')
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Empleado'
+        verbose_name_plural  = 'empleados'
+
+    def __str__(self) :
+        return f'{self.nombre} {self.apellido}'
 
 class ReservasServicios(models.Model):
     pass
