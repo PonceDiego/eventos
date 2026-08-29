@@ -147,13 +147,13 @@ class ClienteUpdateView(UpdateView):
 class CoordinadorUpdateView(UpdateView):
     model = Coordinador
     template_name = 'servicios/formCoordinadores.html'
-    fields = ['nombre', 'apellido' ,'dni' , 'fecha_alta']
+    fields = ['nombre', 'apellido' ,'dni', 'activo']
     success_url = reverse_lazy('servicios:lista_coordinador')
 
 class EmpleadoUpdateView(UpdateView):
     model= Empleado
     template_name = 'servicios/formEmpleados.html'
-    fields = ['nombre' , 'apellido' , 'legajo']
+    fields = ['nombre' , 'apellido' , 'legajo', 'activo']
     success_url = reverse_lazy('servicios:lista_empleados')
 
 #Baja Lógica
