@@ -1,5 +1,6 @@
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -18,7 +19,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'servicios:listar' %}">Servicios</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_cliente' %}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Coordinadores/Empleados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_coordinador' %}">Coordinadores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_empleados' %}">Empleados</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Reservas</a></li>
                     <li class="nav-item"><a class="nav-link text-warning" href="/admin/">Django Admin</a></li>
                     <li class="nav-item"><a class="nav-link text-info" href="#">API Docs</a></li>

@@ -1,20 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import (
-    ServicioListView,
-    ServicioInactivosListView,
-    ServicioCreateView,
-    ServicioUpdateView,
-    ServicioBajaLogicaView,
-    ServicioRestaurarView,
-    ClienteListView,
-    ClienteInactivoListView,
-    ClienteCreateView,
-    ClienteUpdateView,
-    ClienteBajaLogicaView,
-    ClienteRestaurarView
-)
+from .views import *
 
 app_name = 'servicios'
 
@@ -32,8 +19,22 @@ urlpatterns = [
     path('cliente_nuevo/', ClienteCreateView.as_view(), name='cliente_nuevo'),
     path('cliente_editar/<int:pk>/', ClienteUpdateView.as_view(), name='cliente_editar'),
     path('cliente_eliminar/<int:pk>/', ClienteBajaLogicaView.as_view(), name='cliente_eliminar'),
-    path('cliente_restaurar/<int:pk>/', ClienteRestaurarView.as_view(), name='cliente_restaurar')
+    path('cliente_restaurar/<int:pk>/', ClienteRestaurarView.as_view(), name='cliente_restaurar'),
 
+    path('coordinador', CoordinadorListView.as_view(), name='lista_coordinador'),
+    path('coordinador_inactivo/', CoordinadorInactivoListView.as_view(), name='coordinador_inactivo'),
+    path('coordinador_nuevo/', CoordinadorCreateView.as_view(), name='coordinador_nuevo'),
+    path('coordinador_editar/<int:pk>/', CoordinadorUpdateView.as_view(), name='coordinador_editar'),
+    path('coordinador_eliminar/<int:pk>/', CoordinadorBajaLogicaView.as_view(), name='coordinador_eliminar'),
+    path('coordinador_restaurar/<int:pk>/', CoordinadorRestaurarView.as_view(), name='coordinador_restaurar'),
+
+
+    path('empleado', EmpleadoListView.as_view(), name='lista_empleados'),
+    path('empleado_inactivo/', EmpleadoInactivoListView.as_view(), name='empleado_inactivo'),
+    path('empleado_nuevo/', EmpleadoCreateView.as_view(), name='empleado_nuevo'),
+    path('empleado_editar/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleado_editar'),
+    path('empleado_eliminar/<int:pk>/', EmpleadoBajaLogicaView.as_view(), name='empleado_eliminar'),
+    path('empleado_restaurar/<int:pk>/', EmpleadoRestaurarView.as_view(), name='empleado_restaurar')
 
 ]
 
