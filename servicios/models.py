@@ -56,5 +56,17 @@ class Empleado(models.Model):
     def __str__(self) :
         return f'{self.nombre} {self.apellido}'
 
-class ReservasServicios(models.Model):
-    pass
+class ReservaServicios(models.Model):
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, related_name = 'reservas')
+    servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE, related_name= 'reservas')
+    empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, related_name='reservas_empleado')
+    coordinador = models.ForeignKey('Coordinador', on_delete=models.CASCADE, related_name='reservas_coordinador')
+    fecha_reserva = models.DateTimeField(auto_now_add=True)
+    fecha_servicio = models.DateTimeField()
+
+    class Meta:
+        verbose_name = 'Reserva'
+        verbose_name_plural = 'Reservas'
+
+    def __str__(self):
+        return f"Reserva de {self.servicio} - {self.cliente} - ({self.fecha_reserva.strftime('%dd/%mm/%YYYY')})"

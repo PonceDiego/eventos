@@ -34,7 +34,12 @@ urlpatterns = [
     path('empleado_nuevo/', EmpleadoCreateView.as_view(), name='empleado_nuevo'),
     path('empleado_editar/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleado_editar'),
     path('empleado_eliminar/<int:pk>/', EmpleadoBajaLogicaView.as_view(), name='empleado_eliminar'),
-    path('empleado_restaurar/<int:pk>/', EmpleadoRestaurarView.as_view(), name='empleado_restaurar')
+    path('empleado_restaurar/<int:pk>/', EmpleadoRestaurarView.as_view(), name='empleado_restaurar'),
+
+    path('reservas/', ReservaListView.as_view(), name='lista_reservas'),
+    path('reservas/nueva/', ReservaCreateView.as_view(), name='reserva_nuevo'),
+    path('reservas/<int:pk>/editar/', ReservaUpdateView.as_view(), name='reserva_editar'),
+    path('reservas/<int:pk>/eliminar/', ReservaDeleteView.as_view(), name='reserva_eliminar'),
 
 ]
 
