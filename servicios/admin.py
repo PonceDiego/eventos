@@ -1,6 +1,20 @@
 from django.contrib import admin
 from .models import Servicio, Cliente, Coordinador, Empleado
+from django.contrib.auth.models import User, Group
 
+
+# Título de la barra superior
+admin.site.site_header = "Administración de EventosApp"
+
+# Texto en la pestaña del navegador
+admin.site.site_title = "Eventos Admin"
+
+# Subtítulo de la página principal
+admin.site.index_title = "Panel de control"
+
+# Removiendo modelos por defecto
+admin.site.unregister(User)
+admin.site.unregister(Group)
 
 # Register your models here.
 @admin.register(Servicio)
