@@ -1,44 +1,75 @@
-{% extends 'servicios/coordinadorbase.html' %}
+{% extends 'servicios/base.html' %}
 
+{% block title %}Coordinadores{% endblock %}
 {% block content %}
+{% url 'servicios:coordinador_inactivo' as url_inactivos %}
+{% url 'servicios:lista_coordinador' as url_activos %}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2>Coordinador Activos</h2>
-  <a href="{% url 'servicios:coordinador_nuevo' %}" class="btn btn-primary">+ Nuevo Coordinador</a>
+    <h2>Coordinadores {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
+
+    <div class="d-flex align-items-center gap-3">
+        <!-- Switch para alternar entre activos e inactivos -->
+        <div class="form-check form-switch m-0">
+            <input class="form-check-input"
+                   type="checkbox"
+                   role="switch"
+                   id="switchCoordinadoresInactivos"
+                   {% if es_inactivo %}checked{% endif %}
+                   onchange="location.href = this.checked ? '{{ url_inactivos }}' : '{{ url_activos }}';">
+            <label class="form-check-label fw-bold" for="switchCoordinadoresInactivos">
+                Inactivos
+            </label>
+        </div>
+
+        <a href="{% url 'servicios:coordinador_nuevo' %}" class="btn btn-primary">+ Nuevo Coordinador</a>
+    </div>
 </div>
 
 <div class="card shadow-sm border-0">
-  <div class="card-body p-0">
-    <table class="table table-hover mb-0 align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>DNI</th>
-          <th>Fecha Alta</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for x in coordinadores %}
-        <tr>
-          <td class="fw-semibold">{{ x.nombre }}</td>
-          <td>{{ x.apellido }}</td>
-          <td>{{ x.dni}}</td>
-          <td>{{ x.fecha_alta}}</td>
-          <td class="text-end">
-            <a href="{% url 'servicios:coordinador_editar' x.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
-            <form action="{% url 'servicios:coordinador_eliminar' x.pk %}" method="POST" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="text-center py-4 text-muted">No hay Coordinadores Activos.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Fecha Alta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in coordinadores %}
+                <tr>
+                    <td class="fw-semibold">{{ x.nombre }}</td>
+                    <td>{{ x.apellido }}</td>
+                    <td>{{ x.dni }}</td>
+                    <td>{{ x.fecha_alta }}</td>
+
+                    <td class="text-end">
+                      {% if es_inactivo %}
+                      <form action="{% url 'servicios:coordinador_restaurar' x.pk %}" method="POST" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
+                    </form>
+                    {% else %}
+
+                        <a href="{% url 'servicios:coordinador_editar' x.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
+                        <form action="{% url 'servicios:coordinador_eliminar' x.pk %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                      {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-muted">
+                        No hay coordinadores {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

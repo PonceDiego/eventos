@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404, render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
-from .models import Servicio, Cliente, Coordinador
+from .models import Servicio, Cliente, Coordinador , Empleado
 
 # Landing Page
 def home(request):
@@ -38,6 +38,21 @@ class CoordinadorListView(ListView):
     context_object_name = 'coordinadores'
     def get_queryset(self):
         return Coordinador.objects.filter(activo = True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
+
+class EmpleadoListView(ListView):
+    model = Empleado
+    template_name = 'servicios/lista_empleados.html'
+    context_object_name = 'empleados'
+    def get_queryset(self):
+        return Empleado.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
 
 
 # Listar inactivos
@@ -67,11 +82,27 @@ class ClienteInactivoListView(ListView):
 
 class CoordinadorInactivoListView(ListView):
     model = Coordinador
-    template_name = 'servicios/coordinadores_inactivos.html'
+    template_name = 'servicios/lista_coordinadores.html'
     context_object_name = 'coordinadores'
 
     def get_queryset(self):
         return Coordinador.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
+
+class EmpleadoInactivoListView(ListView):
+    model = Coordinador
+    template_name = 'servicios/lista_empleados.html'
+    context_object_name = 'empleados'
+
+    def get_queryset(self):
+        return Empleado.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
 
 # Views de creación, edición, eliminación y restauración cliente
 
@@ -94,6 +125,12 @@ class CoordinadorCreateView(CreateView):
     fields = ['nombre', 'apellido' ,'dni']
     success_url = reverse_lazy('servicios:lista_coordinador')
 
+class EmpleadoCreateView(CreateView):
+    model = Empleado
+    template_name = 'servicios/formEmpleados.html'
+    fields = ['nombre' , 'apellido' , 'legajo']
+    success_url = reverse_lazy('servicios:lista_empleados')
+
 #Edición
 class ServicioUpdateView(UpdateView):
     model = Servicio
@@ -112,6 +149,12 @@ class CoordinadorUpdateView(UpdateView):
     template_name = 'servicios/formCoordinadores.html'
     fields = ['nombre', 'apellido' ,'dni' , 'fecha_alta']
     success_url = reverse_lazy('servicios:lista_coordinador')
+
+class EmpleadoUpdateView(UpdateView):
+    model= Empleado
+    template_name = 'servicios/formEmpleados.html'
+    fields = ['nombre' , 'apellido' , 'legajo']
+    success_url = reverse_lazy('servicios:lista_empleados')
 
 #Baja Lógica
 class ServicioBajaLogicaView(View):
@@ -134,6 +177,13 @@ class CoordinadorBajaLogicaView(View):
         coordinador.activo= False
         coordinador.save()
         return redirect('servicios:lista_coordinador')
+
+class EmpleadoBajaLogicaView(View):
+    def post(self,request,pk):
+        empleado = get_object_or_404(Empleado , pk=pk)
+        empleado.activo= False
+        empleado.save()
+        return redirect('servicios:lista_empleados')
     
 #Restauración (active = False -> True)
 class ServicioRestaurarView(View):
@@ -157,4 +207,11 @@ class CoordinadorRestaurarView(View):
         coordinador.activo=True
         coordinador.save()
         return redirect('servicios:coordinador_inactivo')
+
+class EmpleadoRestaurarView(View):
+    def post(self , request , pk):
+        empleado = get_object_or_404(Empleado , pk=pk)
+        empleado.activo=True
+        empleado.save()
+        return redirect('servicios:empleado_inactivo')
 

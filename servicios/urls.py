@@ -26,7 +26,16 @@ urlpatterns = [
     path('coordinador_nuevo/', CoordinadorCreateView.as_view(), name='coordinador_nuevo'),
     path('coordinador_editar/<int:pk>/', CoordinadorUpdateView.as_view(), name='coordinador_editar'),
     path('coordinador_eliminar/<int:pk>/', CoordinadorBajaLogicaView.as_view(), name='coordinador_eliminar'),
-    path('coordinador_restaurar/<int:pk>/', CoordinadorRestaurarView.as_view(), name='coordinador_restaurar')
+    path('coordinador_restaurar/<int:pk>/', CoordinadorRestaurarView.as_view(), name='coordinador_restaurar'),
+
+
+    path('empleado', EmpleadoListView.as_view(), name='lista_empleados'),
+    path('empleado_inactivo/', EmpleadoInactivoListView.as_view(), name='empleado_inactivo'),
+    path('empleado_nuevo/', EmpleadoCreateView.as_view(), name='empleado_nuevo'),
+    path('empleado_editar/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleado_editar'),
+    path('empleado_eliminar/<int:pk>/', EmpleadoBajaLogicaView.as_view(), name='empleado_eliminar'),
+    path('empleado_restaurar/<int:pk>/', EmpleadoRestaurarView.as_view(), name='empleado_restaurar')
+
 ]
 
 
