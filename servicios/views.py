@@ -13,7 +13,7 @@ def home(request):
 # Listar solo los activos
 class ServicioListView(ListView):
     model = Servicio
-    template_name = 'servicios/listar_servicios.html'
+    template_name = 'servicios/lista_servicios.html'
     context_object_name = 'servicios'
     def get_queryset(self):
         return Servicio.objects.filter(activo=True)
@@ -59,7 +59,7 @@ class EmpleadoListView(ListView):
 # Listar inactivos
 class ServicioInactivosListView(ListView):
     model = Servicio
-    template_name = 'servicios/listar_servicios.html'
+    template_name = 'servicios/lista_servicios.html'
     context_object_name = 'servicios'
 
     def get_queryset(self):
@@ -121,7 +121,7 @@ class ServicioCreateView(CreateView):
 
 class ClienteCreateView(CreateView):
     model = Cliente
-    template_name = 'servicios/formcliente.html'
+    template_name = 'servicios/form_cliente.html'
     fields = ['nombre' , 'apellido' , 'contacto']
     success_url = reverse_lazy('servicios:lista_cliente')
 
@@ -183,7 +183,7 @@ class ServicioUpdateView(UpdateView):
 
 class ClienteUpdateView(UpdateView):
     model = Cliente
-    template_name = 'servicios/formcliente.html'
+    template_name = 'servicios/form_cliente.html'
     fields = ['nombre' , 'apellido' , 'contacto', 'activo']
     success_url = reverse_lazy('servicios:lista_cliente')
 
