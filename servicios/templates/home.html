@@ -13,8 +13,20 @@
     <div class="col-md-8 col-lg-6">
         <h3 class="text-center mb-4 fw-semibold">Servicios Disponibles</h3>
         
-        <div id="carruselServicios" class="carousel slide shadow rounded p-4 bg-dark text-white" data-bs-ride="carousel">
-            <div class="carousel-inner">
+        <div id="carruselServicios" class="carousel slide shadow rounded p-4 bg-dark bg-gradient text-white" data-bs-ride="carousel">
+            
+            <div class="carousel-indicators mb-2">
+                {% for servicio in servicios %}
+                <button type="button" 
+                        data-bs-target="#carruselServicios" 
+                        data-bs-slide-to="{{ forloop.counter0 }}" 
+                        class="{% if forloop.first %}active{% endif %}" 
+                        aria-current="{% if forloop.first %}true{% endif %}" 
+                        aria-label="Servicio {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+            
+            <div class="carousel-inner p-2 pb-4">
                 {% for servicio in servicios %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %} text-center py-4">
                     <h4 class="fw-bold mb-3">{{ servicio.nombre }}</h4>
