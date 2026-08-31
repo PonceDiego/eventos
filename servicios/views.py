@@ -6,7 +6,8 @@ from .models import Servicio, Cliente, Coordinador , Empleado, ReservaServicios
 
 # Landing Page
 def home(request):
-    return render(request, 'home.html')
+    servicios = Servicio.objects.filter(activo=True)
+    return render(request, 'home.html', {'servicios' : servicios})
 
 # Views de listas
 
@@ -142,6 +143,13 @@ class ReservaCreateView(CreateView):
     template_name = 'servicios/form_reserva.html'
     success_url = reverse_lazy('servicios:lista_reservas')
     fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
+
+    def get_initial(self):
+        initial = super().get_initial()
+        servicio_id = self.request.GET.get('servicio_id')
+        if servicio_id:
+            initial['servicio'] = servicio_id
+        return initial
 
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
