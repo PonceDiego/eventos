@@ -115,7 +115,7 @@ class ReservaListView(ListView):
 #Creación
 class ServicioCreateView(CreateView):
     model = Servicio
-    template_name = 'servicios/form.html'
+    template_name = 'servicios/form_servicio.html'
     fields = ['nombre', 'descripcion', 'precio']
     success_url = reverse_lazy('servicios:listar')
 
