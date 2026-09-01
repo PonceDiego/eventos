@@ -1,13 +1,12 @@
 {% extends 'servicios/base.html' %}
 
-{% block title %}Inicio - Sistema de Gestión{% endblock %}
-
 {% block content %}
 <div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
-    <h1 class="display-5 fw-bold">Bienvenido a EventosApp</h1>
-    <p class="fs-4 text-muted">Gestión centralizada de eventos, clientes, reservas y personal.</p>
+  <h1 class="display-5 fw-bold">Bienvenido a EventosApp</h1>
+  <p class="fs-4 text-muted">Gestión centralizada de eventos, clientes, reservas y personal.</p>
 </div>
 
+<<<<<<< Updated upstream
 {% if servicios %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
@@ -58,4 +57,50 @@
 </div>
 {% endif %}
 
+=======
+{% if objetivos %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <h3 class="text-center mb-4 fw-semibold">Objetivos del Mes</h3>
+    <div class="row g-3">
+      {% for objetivo in objetivos %}
+      <div class="col-md-6">
+        <a href="{% url 'servicios:detalle' objetivo.servicio.pk %}" class="text-decoration-none text-dark">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">{{ objetivo.servicio.nombre }}</h5>
+              <p class="card-text text-muted mb-2">{{ objetivo.vendidos }} / {{ objetivo.meta }} vendidos</p>
+              <div class="progress mb-2" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio objetivo.vendidos objetivo.meta 100 %}%"></div>
+              </div>
+              <p class="card-text small text-muted mb-0">Faltan {{ objetivo.restante }} para la meta</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if ranking %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <h3 class="text-center mb-4 fw-semibold">Empleado del Mes</h3>
+    <ul class="list-group shadow-sm">
+      {% for empleado in ranking %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>
+          <span class="fw-bold">#{{ forloop.counter }}</span>
+          {{ empleado.nombre }} {{ empleado.apellido }}
+        </span>
+        <span class="badge bg-primary rounded-pill">{{ empleado.total_reservas }} reservas</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+>>>>>>> Stashed changes
 {% endblock %}

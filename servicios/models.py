@@ -70,3 +70,16 @@ class ReservaServicios(models.Model):
 
     def __str__(self):
         return f"Reserva de {self.servicio} - {self.cliente} - ({self.fecha_reserva.strftime('%dd/%mm/%YYYY')})"
+
+
+class ObjetivoVenta(models.Model):
+    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='objetivos')
+    meta = models.PositiveIntegerField('Meta de ventas')
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Objetivo de venta'
+        verbose_name_plural = 'Objetivos de venta'
+
+    def __str__(self):
+        return f'{self.servicio.nombre} - Meta: {self.meta}'
