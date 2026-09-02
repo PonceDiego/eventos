@@ -1,14 +1,33 @@
 from django.forms.widgets import DateTimeInput
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404, render
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, View
-from .models import Servicio, Cliente, Coordinador , Empleado, ReservaServicios
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, View , DetailView
+from .models import Servicio, Cliente, Coordinador , Empleado, ReservaServicios , ObjetivoVenta
+from django.db.models import Count, Q
+from django.utils import timezone
 
 # Landing Page
 def home(request):
     servicios = Servicio.objects.filter(activo=True)
-    return render(request, 'home.html', {'servicios' : servicios})
+    ahora = timezone.now()
+    objetivos = ObjetivoVenta.objects.filter(activo=True, servicio__activo=True).annotate(
+        vendidos=Count(
+            'servicio__reservas',
+            filter=Q(servicio__reservas__fecha_reserva__year=ahora.year,
+                     servicio__reservas__fecha_reserva__month=ahora.month)
+        )
+    )
 
+    ranking = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
+                     reservas_empleado__fecha_reserva__month=ahora.month)
+        )
+    ).order_by('-total_reservas')[:5]
+    for objetivo in objetivos:
+        objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
+    return render(request, 'home.html', {'servicios': servicios, 'objetivos': objetivos, 'ranking': ranking})
 # Views de listas
 
 # Listar solo los activos
@@ -128,13 +147,13 @@ class ClienteCreateView(CreateView):
 
 class CoordinadorCreateView(CreateView):
     model = Coordinador
-    template_name = 'servicios/formCoordinadores.html'
+    template_name = 'servicios/form_coordinador.html'
     fields = ['nombre', 'apellido' ,'dni']
     success_url = reverse_lazy('servicios:lista_coordinador')
 
 class EmpleadoCreateView(CreateView):
     model = Empleado
-    template_name = 'servicios/formEmpleados.html'
+    template_name = 'servicios/form_empleado.html'
     fields = ['nombre' , 'apellido' , 'legajo']
     success_url = reverse_lazy('servicios:lista_empleados')
 
@@ -281,3 +300,11 @@ class ReservaDeleteView(DeleteView):
     model = ReservaServicios
     template_name = 'servicios/reserva_confirmar.html'
     success_url = reverse_lazy('servicios:lista_reservas')
+
+
+#DETALLE
+
+class ServicioDetailView(DetailView):
+    model = Servicio
+    template_name = 'servicios/detalle_servicio.html'
+    context_object_name = 'servicio'

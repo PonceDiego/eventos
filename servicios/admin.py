@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Servicio, Cliente, Coordinador, Empleado, ReservaServicios
+from .models import Servicio, Cliente, Coordinador, Empleado, ReservaServicios , ObjetivoVenta
 from django.contrib.auth.models import User, Group
 
 
@@ -45,3 +45,10 @@ class EmpleadoAdmin(admin.ModelAdmin):
 @admin.register(ReservaServicios)
 class ReservaAdmin(admin.ModelAdmin):
     list_display = ('fecha_servicio', 'cliente', 'coordinador', 'fecha_reserva')
+
+
+@admin.register(ObjetivoVenta)
+class ObjetivoVentaAdmin(admin.ModelAdmin):
+    list_display = ('servicio', 'meta', 'activo')
+    search_fields = ('servicio__nombre',)
+    list_filter = ('activo',)
