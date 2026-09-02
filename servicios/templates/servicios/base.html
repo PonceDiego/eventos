@@ -3,24 +3,30 @@
 <!DOCTYPE html>
 
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Events {% block title %}{% endblock %}</title>
-  <link rel="icon" type="image/png" href="{% static 'servicios/logo_arriba.png' %} " >
-  {% bootstrap_css %}
+    <meta charset="UTF-8">
+    <title>Events {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'servicios/logo_e.png' %} ">
+    {% bootstrap_css %}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
-            --color-bg-body: #E5E9EC;     
+            --color-bg-body: #E5E9EC;
             --color-bg-card: #FFFFFF;
-            --color-primary: #476A82;     /* Muted slate blue for Navbar & Footer */
-            --color-secondary: #6070AC;   /* Borders & secondary highlights */
-            --color-accent: #84B1F9;      /* Action highlights & active nav links */
-            --color-dark-deep: #073B91;   /* Primary button background */
+            --color-primary: #476A82;
+            /* Muted slate blue for Navbar & Footer */
+            --color-secondary: #6070AC;
+            /* Borders & secondary highlights */
+            --color-accent: #84B1F9;
+            /* Action highlights & active nav links */
+            --color-dark-deep: #073B91;
+            /* Primary button background */
             --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -36,22 +42,26 @@
             box-shadow: 0 10px 30px -5px rgba(71, 106, 130, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(71, 106, 130, 0.1);
         }
-        .content-container > .d-flex{
+
+        .content-container>.d-flex {
             flex-wrap: wrap !important;
             gap: 1rem !important;
         }
+
         .content-container:has(.card) {
             background-color: transparent !important;
             border: none !important;
             box-shadow: none !important;
         }
 
-        .card, .list-group-item {
+        .card,
+        .list-group-item {
             border-color: rgba(71, 106, 130, 0.12) !important;
         }
 
         /* Soft Slate Navbar & Footer */
-        .navbar-custom, footer {
+        .navbar-custom,
+        footer {
             background-color: var(--color-primary) !important;
         }
 
@@ -59,6 +69,11 @@
             color: rgba(255, 255, 255, 0.85) !important;
             font-weight: 500;
             transition: color 0.2s ease-in-out;
+            display: inline-block;
+        }
+
+        .navbar-custom .nav-link:hover {
+            transform: translateY(-2px);
         }
 
         .navbar-custom .nav-link:hover,
@@ -86,8 +101,86 @@
             color: #ffffff !important;
         }
 
+        .navbar-custom .nav-api-btn {
+            border: 1px solid var(--color-secondary);
+            background-color: rgba(96, 112, 172, 0.25);
+            color: #ffffff !important;
+            border-radius: 8px;
+            padding: 0.35rem 0.85rem !important;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .navbar-custom .nav-api-btn:hover {
+            background-color: var(--color-secondary);
+            color: #ffffff !important;
+        }
+
+        .navbar-custom .nav-api-btn.active {
+            background-color: var(--color-dark-deep);
+            border-color: var(--color-dark-deep);
+            color: #ffffff !important;
+        }
+
+        .navbar-brand {
+            transition: transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.08);
+        }
+
+        .navbar-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            margin-right: -12px !important;
+        }
+
+        /* Estilos Footer */
+        footer.footer-custom {
+            background-color: var(--color-primary) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-logo-img {
+            height: auto;
+            max-height: 150px;
+            width: auto;
+            object-fit: contain;
+            mix-blend-mode: screen;
+            transition: transform 0.2s ease;
+        }
+
+        .footer-brand-link:hover .footer-logo-img {
+            transform: scale(1.04);
+        }
+
+        .footer-api-link {
+            color: var(--color-accent) !important;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            display: inline-block;
+        }
+
+        .footer-api-link:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .extra-small {
+            font-size: 0.78rem;
+        }
+
+
         /* Typography Hierarchy */
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             color: var(--color-primary);
             font-weight: 700 !important;
             letter-spacing: -0.02em;
@@ -132,8 +225,10 @@
         }
 
         .table tbody tr:hover {
-            background-color: rgba(132, 177, 249, 0.08) !important; /* Hover suave con color accent */
+            background-color: rgba(132, 177, 249, 0.08) !important;
+            /* Hover suave con color accent */
         }
+
         /* Responsive Table Controls */
         .table-responsive {
             border-radius: 8px;
@@ -144,37 +239,46 @@
         /* Fluid Heading Sizes */
         @media (max-width: 750px) {
             body {
-                overflow-x: hidden; 
+                overflow-x: hidden;
             }
+
             .content-container {
                 border-radius: 12px;
                 padding: 1.25rem !important;
             }
+
             .content-container .d-flex {
                 flex-direction: column !important;
                 align-items: stretch !important;
                 gap: 0.75rem !important;
             }
 
-            .content-container .d-flex > div,
-            .content-container .d-flex > a {
+            .content-container .d-flex>div,
+            .content-container .d-flex>a {
                 width: 100% !important;
                 justify-content: space-between !important;
             }
-            
-            h1 { font-size: 1.75rem; }
-            h2 { font-size: 1.5rem; }
-            
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
             /* Stack controls on mobile screens */
             .header-actions {
                 flex-direction: column;
                 align-items: stretch !important;
                 gap: 1rem;
             }
+
             .table-responsive {
                 margin-bottom: 0;
                 border-radius: 8px;
             }
+
             footer.footer-custom {
                 padding-top: 1.5rem !important;
                 padding-bottom: 1.5rem !important;
@@ -182,23 +286,27 @@
         }
 
         /* Botones de Acción Secundarios */
-        .btn-action-edit, .btn-warning {
+        .btn-action-edit,
+        .btn-warning {
             background-color: var(--color-accent) !important;
             border-color: var(--color-accent) !important;
             color: #0d2e5c !important;
             font-weight: 600;
         }
 
-        .btn-action-edit:hover, .btn-warning:hover{
+        .btn-action-edit:hover,
+        .btn-warning:hover {
             background-color: #6da2f7 !important;
         }
 
-        .btn-action-delete, .btn-danger {
+        .btn-action-delete,
+        .btn-danger {
             background-color: #dc3545 !important;
             border-color: #dc3545 !important;
             color: #ffffff !important;
             font-weight: 500;
         }
+
         /* Custom Switch Inactivos */
         .form-check-label {
             color: var(--color-primary);
@@ -216,67 +324,99 @@
     </style>
 
 </head>
+
 <body class="bg-light d-flex flex-column min-vh-100">
 
- <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm py-2 py-md-3">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'home' %}"> EventosApp </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm py-2 py-md-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'servicios/logo_e.png' %}" alt="Logo EventosApp" class="navbar-logo me-1">
+                <span class="fw-bold tracking-tight">EventosApp</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
 
-                {% url 'servicios:listar' as url_servicios %}
-                {% url 'servicios:lista_cliente' as url_clientes %}
-                {% url 'servicios:lista_coordinador' as url_coordinadores %}
-                {% url 'servicios:lista_empleados' as url_empleados %}
-                {% url 'servicios:lista_reservas' as url_reservas %}
-                {% url 'api:index' as url_api_docs %}
-                
+                    {% url 'servicios:listar' as url_servicios %}
+                    {% url 'servicios:lista_cliente' as url_clientes %}
+                    {% url 'servicios:lista_coordinador' as url_coordinadores %}
+                    {% url 'servicios:lista_empleados' as url_empleados %}
+                    {% url 'servicios:lista_reservas' as url_reservas %}
+                    {% url 'api:index' as url_api_docs %}
 
-                <li class="nav-item"><a class="nav-link {% if request.path == '/servicios/' or '/servicios/inactivos' in request.path or '/servicios/nuevo' in request.path or '/servicios/editar' in request.path %}active{% endif %}" href="{{url_servicios}}">Servicios</a></li>
-                <li class="nav-item"><a class="nav-link {% if '/servicios/cliente' in request.path %}active{% endif %}" href="{{url_clientes}}">Clientes</a></li>
-                <li class="nav-item"><a class="nav-link {% if '/servicios/coordinador' in request.path %}active{% endif %}" href="{{url_coordinadores}}">Coordinadores</a></li>
-                <li class="nav-item"><a class="nav-link {% if '/servicios/empleado' in request.path %}active{% endif %}" href="{{url_empleados}}">Empleados</a></li>
-                <li class="nav-item"><a class="nav-link {% if '/servicios/reservas' in request.path %}active{% endif %}" href="{{url_reservas}}">Reservas</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/" target="_blank">Django Admin&#8599;</a></li>
-                <li class="nav-item"><a class="nav-link nav-api-btn {% if '/api/' in request.path %}active{% endif %}" href="{{url_api_docs}}">API Docs</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<main class="flex-grow-1 container-fluid container-xl my-3 my-md-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-xl-11 content-container p-3 p-sm-4 p-md-5">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
-</main>
-<footer class="footer-custom py-3 py-md-4 mt-auto w-100 flex-shrink-0">
-    <div class="container">
-        <div class="row align-items-center text-center text-md-start g-3">
-            <div class="col-12 col-md-4">
-                    <img src="{% static 'servicios/eventosfooter.png' %}"
-                     alt="Logo EventosApp" width="130" height="130" decoding="async" style="height:auto; max-height: 130px; width:auto;">
-
+                    <li class="nav-item"><a
+                            class="nav-link {% if request.path == '/servicios/' or '/servicios/inactivos' in request.path or '/servicios/nuevo' in request.path or '/servicios/editar' in request.path %}active{% endif %}"
+                            href="{{url_servicios}}">Servicios</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {% if '/servicios/cliente' in request.path %}active{% endif %}"
+                            href="{{url_clientes}}">Clientes</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {% if '/servicios/coordinador' in request.path %}active{% endif %}"
+                            href="{{url_coordinadores}}">Coordinadores</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {% if '/servicios/empleado' in request.path %}active{% endif %}"
+                            href="{{url_empleados}}">Empleados</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link {% if '/servicios/reservas' in request.path %}active{% endif %}"
+                            href="{{url_reservas}}">Reservas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/" target="_blank">Django Admin&#8599;</a></li>
+                    <li class="nav-item"><a
+                            class="nav-link nav-api-btn {% if '/api/' in request.path %}active{% endif %}"
+                            href="{{url_api_docs}}">API Docs</a></li>
+                </ul>
             </div>
-            <div class="col-md-4">
-                <h5>Contacto</h5>
-                <p class="mb-0">Tel: +54 9 0294 - 492032</p>
-                <p class="mb-0">Email: contacto@events.com</p>
-                <p class="mb-0">Bariloche Rio Negro Argentina</p>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 container-fluid container-xl my-3 my-md-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-11 content-container p-3 p-sm-4 p-md-5">
+                {% block content %}{% endblock %}
             </div>
-            <div class="col-md-4">
-                    <div class="d-flex flex-column gap-2">
-                        <br>
-                        <p class="mb-0">Proyecto Alkemy 2026</p>
+        </div>
+    </main>
+    <footer class="footer-custom py-4 mt-auto w-100 flex-shrink-0">
+        <div class="container">
+            <div class="row align-items-center text-center text-md-start g-4">
+                <div class="col-12 col-md-4 d-flex justify-content-center justify-content-md-start">
+                    <a href="{% url 'home' %}" class="d-inline-block footer-brand-link">
+                        <img src="{% static 'servicios/eventosfooter.png' %}" alt="Logo EventosApp"
+                            class="footer-logo-img">
+                    </a>
+                </div>
+                <div class="col-12 col-md-4">
+                    <h5 class="fw-bold text-white mb-3">Contacto</h5>
+                    <ul class="list-unstyled mb-0 text-white-50 small d-flex flex-column gap-1">
+                        <li><span class="text-white fw-medium">Tel:</span> +54 9 0294 - 492032</li>
+                        <li><span class="text-white fw-medium">Email:</span> contacto@events.com</li>
+                        <li><span class="text-white fw-medium">Ubicación:</span> Bariloche, Río Negro, Argentina</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4 text-center text-md-end">
+                    <h5 class="text-white fw-bold mb-3">Proyecto</h5>
+                    <p class="text-white-50 small mb-2">Alkemy 2026</p>
+                    <div class="d-flex flex-column align-items-center align-items-md-end gap-1">
+                        <a href="https://github.com/PonceDiego/eventos/" target="_blank"
+                            class="footer-api-link">Repositorio GitHub &#8599;</a>
+                        <a href="https://trello.com/b/9qY3JI6J/eventos-grupo-1" target="_blank"
+                            class="footer-api-link">Tablero Trello &#8599;</a>
                     </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</footer>
-  {% bootstrap_javascript %}
+
+        <!-- Divisor y Copyright -->
+        <hr class="my-3 border-light opacity-10">
+        <div class="text-center text-white-50 extra-small">
+            &copy; {% now "Y" %} EventosApp. Todos los derechos reservados.
+        </div>
+        </div>
+    </footer>
+    {% bootstrap_javascript %}
 </body>
+
 </html>
