@@ -2,49 +2,80 @@
 
 {% block content %}
 
-{% if objetivos %}
-<div class="row justify-content-center mt-5">
-  <div class="col-md-8 col-lg-6">
-    <h3 class="text-center mb-4 fw-semibold">Objetivos del Mes</h3>
-    <div class="row g-3">
-      {% for objetivo in objetivos %}
-      <div class="col-md-6">
-        <a href="{% url 'servicios:detalle' objetivo.servicio.pk %}" class="text-decoration-none text-dark">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-              <h5 class="card-title fw-bold">{{ objetivo.servicio.nombre }}</h5>
-              <p class="card-text text-muted mb-2">{{ objetivo.vendidos }} / {{ objetivo.meta }} vendidos</p>
-              <div class="progress mb-2" style="height: 10px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio objetivo.vendidos objetivo.meta 100 %}%"></div>
-              </div>
-              <p class="card-text small text-muted mb-0">Faltan {{ objetivo.restante }} para la meta</p>
-            </div>
-          </div>
-        </a>
+<div class="row g-4 mt-2">
+  <div class="col-12 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <h4 class="fw-bold text-center text-primary-custom mb-4">Empleados Destacados</h4>
+        <hr class="my-3">
+        {% if ranking %}
+        <ul class="list-group list-group-flush">
+          {% for empleado in ranking %}
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <span><span class="fw-bold me-2">#{{ forloop.counter }}</span>{{ empleado }}</span>
+            <span class="badge bg-primary rounded-pill">{{ empleado.total_reservas }} reservas</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted text-center small mb-0">No hay datos disponibles.</p>
+        {% endif %}
       </div>
-      {% endfor %}
+    </div>
+  </div>
+
+
+  <div class="col-12 col-lg-6 position-relative z-1">
+    <div class="card border-primary border-opacity-25 shadow p-2"
+      style="transform: scale(1.03); background-color: #ffffff;">
+      <div class="card-body p-4 p-md-5">
+        <h3 class="fw-bold text-center text-primary-custom mb-2">Accesos Rápidos</h3>
+        <hr class="my-3">
+
+        <div class="d-flex flex-column gap-3">
+          <!-- Botón Nueva Reserva -->
+          <a href="{% url 'servicios:reserva_nuevo' %}" class="btn btn-primary py-3 fw-bold fs-5 shadow-sm text-center">
+            Nueva Reserva
+          </a>
+
+          <!-- Botón Nuevo Cliente -->
+          <a href="{% url 'servicios:cliente_nuevo' %}" class="btn btn-outline-primary py-3 fw-bold fs-5 text-center">
+            Nuevo Cliente
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Objetivos -->
+  <div class="col-12 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <h4 class="fw-bold text-center text-primary-custom mb-4">Objetivos Actuales</h4>
+        <hr class="my-3">
+
+        {% if objetivos %}
+        <div class="d-flex flex-column gap-3">
+          {% for objetivo in objetivos %}
+          <div>
+            <a href="{% url 'servicios:detalle' objetivo.servicio.pk %}" class="text-decoration-none text-dark">
+              <h6 class="fw-bold mb-1">{{ objetivo.servicio.nombre }}</h6>
+              <p class="text-muted small mb-1">{{ objetivo.vendidos }} / {{ objetivo.meta }} vendidos</p>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-success" role="progressbar"
+                  style="width: {% widthratio objetivo.vendidos objetivo.meta 100 %}%;"></div>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center small mb-0">No hay objetivos fijados.</p>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
-{% endif %}
-
-{% if ranking %}
-<div class="row justify-content-center mt-5">
-  <div class="col-md-8 col-lg-6">
-    <h3 class="text-center mb-4 fw-semibold">Empleado del Mes</h3>
-    <ul class="list-group shadow-sm">
-      {% for empleado in ranking %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>
-          <span class="fw-bold">#{{ forloop.counter }}</span>
-          {{ empleado.nombre }} {{ empleado.apellido }}
-        </span>
-        <span class="badge bg-primary rounded-pill">{{ empleado.total_reservas }} reservas</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-{% endif %}
-
 {% endblock %}

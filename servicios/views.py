@@ -24,7 +24,7 @@ def home(request):
             filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
                      reservas_empleado__fecha_reserva__month=ahora.month)
         )
-    ).order_by('-total_reservas')[:5]
+    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
     for objetivo in objetivos:
         objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
     return render(request, 'home.html', {'servicios': servicios, 'objetivos': objetivos, 'ranking': ranking})

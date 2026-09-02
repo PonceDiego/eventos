@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Servicio(models.Model):
@@ -74,7 +75,7 @@ class ReservaServicios(models.Model):
 
 class ObjetivoVenta(models.Model):
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='objetivos')
-    meta = models.PositiveIntegerField('Meta de ventas')
+    meta = models.PositiveIntegerField('Meta de ventas', validators=[MinValueValidator(1)])
     activo = models.BooleanField('Activo', default=True)
 
     class Meta:
