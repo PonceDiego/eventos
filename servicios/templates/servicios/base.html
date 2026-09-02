@@ -8,37 +8,157 @@
   <title>Events {% block title %}{% endblock %}</title>
   <link rel="icon" type="image/png" href="{% static 'servicios/logo_arriba.png' %} " >
   {% bootstrap_css %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-bg-body: #E5E9EC;     
+            --color-bg-card: #FFFFFF;
+            --color-primary: #476A82;     /* Muted slate blue for Navbar & Footer */
+            --color-secondary: #6070AC;   /* Borders & secondary highlights */
+            --color-accent: #84B1F9;      /* Action highlights & active nav links */
+            --color-dark-deep: #073B91;   /* Primary button background */
+            --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main) !important;
+            background-color: var(--color-bg-body) !important;
+            color: #1e293b;
+        }
+
+        .content-container {
+        background-color: var(--color-bg-card);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px -5px rgba(71, 106, 130, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(71, 106, 130, 0.1);
+        }
+        .card, .list-group-item {
+        border-color: rgba(71, 106, 130, 0.12) !important;
+        }
+
+        /* Soft Slate Navbar & Footer */
+        .navbar-custom, footer {
+            background-color: var(--color-primary) !important;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .nav-link.active {
+            color: var(--color-accent) !important;
+        }
+
+        /* Typography Hierarchy */
+        h1, h2, h3, h4 {
+            color: var(--color-primary);
+            font-weight: 700 !important;
+            letter-spacing: -0.02em;
+        }
+
+        /* Primary Action Buttons */
+        .btn-primary {
+            background-color: var(--color-dark-deep) !important;
+            border-color: var(--color-dark-deep) !important;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-secondary) !important;
+            border-color: var(--color-secondary) !important;
+        }
+
+        /* Hero / Feature Container */
+        .hero-card {
+            background-color: #ffffff !important;
+            border-radius: 16px;
+            border-left: 6px solid var(--color-primary);
+            box-shadow: 0 10px 25px -5px rgba(71, 106, 130, 0.1);
+        }
+
+        /* Encabezado de Tablas */
+        .table thead th {
+            background-color: var(--color-primary) !important;
+            color: #ffffff !important;
+            border-bottom: none;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Filas y Bordes */
+        .table {
+            --bs-table-bg: transparent;
+            border-color: rgba(71, 106, 130, 0.15);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(132, 177, 249, 0.08) !important; /* Hover suave con color accent */
+        }
+
+        /* Botones de Acción Secundarios */
+        .btn-action-edit, .btn-warning {
+            background-color: var(--color-accent) !important;
+            border-color: var(--color-accent) !important;
+            color: #0d2e5c !important;
+            font-weight: 600;
+        }
+
+        .btn-action-edit:hover, .btn-warning:hover{
+            background-color: #6da2f7 !important;
+        }
+
+        .btn-action-delete, .btn-danger {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+    </style>
+
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}"> EventosApp </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:listar' %}">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_cliente' %}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_coordinador' %}">Coordinadores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_empleados' %}">Empleados</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_reservas' %}">Reservas</a></li>
-                    <li class="nav-item"><a class="nav-link text-warning" href="/admin/" target="_blank">Django Admin &#8599;</a></li>
-                    <li class="nav-item"><a class="nav-link text-info" href="/api/" >API Docs</a></li>
-                </ul>
-            </div>
+ <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}"> EventosApp </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:listar' %}">Servicios</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_cliente' %}">Clientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_coordinador' %}">Coordinadores</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_empleados' %}">Empleados</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_reservas' %}">Reservas</a></li>
+                <li class="nav-item"><a class="nav-link text-warning" href="/admin/" target="_blank">Django Admin &#8599;</a></li>
+                <li class="nav-item"><a class="nav-link text-info" href="/api/" >API Docs</a></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-  <div class="container flex-grow-1">
-    {% block content %}{% endblock %}
-  </div>
- <footer class="bg-dark text-light mt-5 py-4">
+<main class="flex-grow-1 container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 content-container p-4 p-md-5">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</main>
+<footer class="text-white py-5 mt-auto">
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                 <img src="{% static 'servicios/eventosfooter.png' %}" alt="Logo EventosApp" height="130">
+                    <img src="{% static 'servicios/eventosfooter.png' %}"
+                     alt="Logo EventosApp" width="130" height="130" decoding="async" style="height:auto; max-height: 130px; width:auto;">
 
             </div>
             <div class="col-md-4">
