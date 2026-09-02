@@ -31,13 +31,18 @@
         }
 
         .content-container {
-        background-color: var(--color-bg-card);
-        border-radius: 16px;
-        box-shadow: 0 10px 30px -5px rgba(71, 106, 130, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(71, 106, 130, 0.1);
+            background-color: var(--color-bg-card);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -5px rgba(71, 106, 130, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(71, 106, 130, 0.1);
         }
+        .content-container > .d-flex{
+            flex-wrap: wrap !important;
+            gap: 1rem !important;
+        }
+
         .card, .list-group-item {
-        border-color: rgba(71, 106, 130, 0.12) !important;
+            border-color: rgba(71, 106, 130, 0.12) !important;
         }
 
         /* Soft Slate Navbar & Footer */
@@ -97,10 +102,58 @@
         .table {
             --bs-table-bg: transparent;
             border-color: rgba(71, 106, 130, 0.15);
+            white-space: nowrap;
+            width: 100%;
         }
 
         .table tbody tr:hover {
             background-color: rgba(132, 177, 249, 0.08) !important; /* Hover suave con color accent */
+        }
+        /* Responsive Table Controls */
+        .table-responsive {
+            border-radius: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Fluid Heading Sizes */
+        @media (max-width: 750px) {
+            body {
+                overflow-x: hidden; 
+            }
+            .content-container {
+                border-radius: 12px;
+                padding: 1.25rem !important;
+            }
+            .content-container .d-flex {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0.75rem !important;
+            }
+
+            .content-container .d-flex > div,
+            .content-container .d-flex > a {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            
+            /* Stack controls on mobile screens */
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 1rem;
+            }
+            .table-responsive {
+                margin-bottom: 0;
+                border-radius: 8px;
+            }
+            footer.footer-custom {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
         }
 
         /* Botones de Acción Secundarios */
@@ -121,12 +174,26 @@
             color: #ffffff !important;
             font-weight: 500;
         }
+        /* Custom Switch Inactivos */
+        .form-check-label {
+            color: var(--color-primary);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .form-check-input:focus {
+            border-color: var(--color-accent) !important;
+            box-shadow: 0 0 0 0.25rem rgba(132, 177, 249, 0.25) !important;
+        }
     </style>
 
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
- <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+ <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm py-2 py-md-3">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{% url 'home' %}"> EventosApp </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -146,17 +213,17 @@
     </div>
 </nav>
 
-<main class="flex-grow-1 container my-5">
+<main class="flex-grow-1 container-fluid container-xl my-3 my-md-5">
     <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8 content-container p-4 p-md-5">
+        <div class="col-12 col-xl-11 content-container p-3 p-sm-4 p-md-5">
             {% block content %}{% endblock %}
         </div>
     </div>
 </main>
-<footer class="text-white py-5 mt-auto">
+<footer class="footer-custom py-3 py-md-4 mt-auto w-100 flex-shrink-0">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row align-items-center text-center text-md-start g-3">
+            <div class="col-12 col-md-4">
                     <img src="{% static 'servicios/eventosfooter.png' %}"
                      alt="Logo EventosApp" width="130" height="130" decoding="async" style="height:auto; max-height: 130px; width:auto;">
 
