@@ -9,12 +9,7 @@ from django.utils import timezone
 # Landing Page
 def home(request):
     servicios = Servicio.objects.filter(activo=True)
-<<<<<<< Updated upstream
-    return render(request, 'home.html', {'servicios' : servicios})
-=======
     ahora = timezone.now()
->>>>>>> Stashed changes
-
     objetivos = ObjetivoVenta.objects.filter(activo=True, servicio__activo=True).annotate(
         vendidos=Count(
             'servicio__reservas',
