@@ -5,10 +5,10 @@
 {% url 'servicios:empleado_inactivo' as url_inactivos %}
 {% url 'servicios:lista_empleados' as url_activos %}
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Empleados {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 gap-sm-3 mb-3">
+    <h2 class="mb-0">Empleados {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
 
-    <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-3 w-100 w-sm-auto justify-content-between justify-content-sm-end">
         <!-- Switch para alternar entre activos e inactivos -->
         <div class="form-check form-switch m-0">
             <input class="form-check-input"
@@ -28,47 +28,49 @@
 
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0 align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Legajo</th>
-                    <th class="text-end">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for e in empleados %}
-                <tr>
-                    <td class="fw-semibold">{{ e.nombre }}</td>
-                    <td>{{ e.apellido }}</td>
-                    <td>{{ e.legajo }}</td>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Legajo</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in empleados %}
+                    <tr>
+                        <td class="fw-semibold">{{ e.nombre }}</td>
+                        <td>{{ e.apellido }}</td>
+                        <td>{{ e.legajo }}</td>
 
-                    <td class="text-end">
-                      {% if es_inactivo %}
-                      <form action="{% url 'servicios:empleado_restaurar' e.pk %}" method="POST" class="d-inline">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
-                    </form>
-                    {% else %}
-
-                        <a href="{% url 'servicios:empleado_editar' e.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
-                        <form action="{% url 'servicios:empleado_eliminar' e.pk %}" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        <td class="text-end">
+                        {% if es_inactivo %}
+                        <form action="{% url 'servicios:empleado_restaurar' e.pk %}" method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
                         </form>
-                      {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center py-4 text-muted">
-                        No hay empleados {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        {% else %}
+
+                            <a href="{% url 'servicios:empleado_editar' e.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
+                            <form action="{% url 'servicios:empleado_eliminar' e.pk %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            No hay empleados {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

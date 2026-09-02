@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-6">
+  <div class="col-12 col-sm-10 col-xl-5">
     <div class="card shadow-sm border-0">
       <div class="card-body p-4">
         <h3 class="fw-bold mb-3">{% if object %}Editar{% else %}Nuevo{% endif %} Coordinador</h3>
@@ -15,8 +15,8 @@
           {% bootstrap_form form %}
 
           <div class="d-flex justify-content-end gap-2 mt-3">
-            <a href="{% url 'servicios:lista_coordinador' %}" class="btn btn-secondary">Cancelar</a>
-            {% bootstrap_button button_type="submit" content="Guardar" button_class="btn-primary" %}
+            <a href="{% url 'servicios:lista_coordinador' %}" class="btn btn-secondary w-sm-auto">Cancelar</a>
+            {% bootstrap_button button_type="submit" content="Guardar" button_class="btn-primary w-sm-auto" %}
           </div>
         </form>
 
