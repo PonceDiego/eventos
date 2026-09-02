@@ -1,3 +1,4 @@
+from django import forms
 from django.forms.widgets import DateTimeInput
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404, render
@@ -205,8 +206,13 @@ def custom_form(form):
 class ServicioUpdateView(UpdateView):
     model = Servicio
     fields = ['nombre', 'descripcion', 'precio', 'activo']
-    template_name = 'servicios/form.html'
+    template_name = 'servicios/form_servicio.html'
     success_url = reverse_lazy('servicios:listar')
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        form.fields['descripcion'].widget = forms.Textarea(attrs={'rows': 4, 'class': 'form-control'})
+        return form
 
 class ClienteUpdateView(UpdateView):
     model = Cliente
