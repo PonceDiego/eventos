@@ -14,14 +14,14 @@ urlpatterns = [
     path('eliminar/<int:pk>/', ServicioBajaLogicaView.as_view(), name='eliminar'),
     path('restaurar/<int:pk>/', ServicioRestaurarView.as_view(), name='restaurar'),
 
-    path('clientes', ClienteListView.as_view(), name='lista_cliente'),
+    path('cliente/', ClienteListView.as_view(), name='lista_cliente'),
     path('cliente_inactivo/', ClienteInactivoListView.as_view(), name='cliente_inactivo'),
     path('cliente_nuevo/', ClienteCreateView.as_view(), name='cliente_nuevo'),
     path('cliente_editar/<int:pk>/', ClienteUpdateView.as_view(), name='cliente_editar'),
     path('cliente_eliminar/<int:pk>/', ClienteBajaLogicaView.as_view(), name='cliente_eliminar'),
     path('cliente_restaurar/<int:pk>/', ClienteRestaurarView.as_view(), name='cliente_restaurar'),
 
-    path('coordinador', CoordinadorListView.as_view(), name='lista_coordinador'),
+    path('coordinador/', CoordinadorListView.as_view(), name='lista_coordinador'),
     path('coordinador_inactivo/', CoordinadorInactivoListView.as_view(), name='coordinador_inactivo'),
     path('coordinador_nuevo/', CoordinadorCreateView.as_view(), name='coordinador_nuevo'),
     path('coordinador_editar/<int:pk>/', CoordinadorUpdateView.as_view(), name='coordinador_editar'),
@@ -29,7 +29,7 @@ urlpatterns = [
     path('coordinador_restaurar/<int:pk>/', CoordinadorRestaurarView.as_view(), name='coordinador_restaurar'),
 
 
-    path('empleado', EmpleadoListView.as_view(), name='lista_empleados'),
+    path('empleado/', EmpleadoListView.as_view(), name='lista_empleados'),
     path('empleado_inactivo/', EmpleadoInactivoListView.as_view(), name='empleado_inactivo'),
     path('empleado_nuevo/', EmpleadoCreateView.as_view(), name='empleado_nuevo'),
     path('empleado_editar/<int:pk>/', EmpleadoUpdateView.as_view(), name='empleado_editar'),

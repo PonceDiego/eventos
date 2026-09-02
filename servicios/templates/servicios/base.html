@@ -65,6 +65,26 @@
         .navbar-custom .nav-link.active {
             color: var(--color-accent) !important;
         }
+        .navbar-custom .nav-api-btn {
+            border: 1px solid var(--color-secondary);
+            background-color: rgba(96, 112, 172, 0.25);
+            color: #ffffff !important;
+            border-radius: 8px;
+            padding: 0.35rem 0.85rem !important;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .navbar-custom .nav-api-btn:hover {
+            background-color: var(--color-secondary);
+            color: #ffffff !important;
+        }
+
+        .navbar-custom .nav-api-btn.active {
+            background-color: var(--color-dark-deep);
+            border-color: var(--color-dark-deep);
+            color: #ffffff !important;
+        }
 
         /* Typography Hierarchy */
         h1, h2, h3, h4 {
@@ -206,13 +226,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:listar' %}">Servicios</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_cliente' %}">Clientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_coordinador' %}">Coordinadores</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_empleados' %}">Empleados</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'servicios:lista_reservas' %}">Reservas</a></li>
-                <li class="nav-item"><a class="nav-link text-warning" href="/admin/" target="_blank">Django Admin &#8599;</a></li>
-                <li class="nav-item"><a class="nav-link text-info" href="/api/" >API Docs</a></li>
+
+                {% url 'servicios:listar' as url_servicios %}
+                {% url 'servicios:lista_cliente' as url_clientes %}
+                {% url 'servicios:lista_coordinador' as url_coordinadores %}
+                {% url 'servicios:lista_empleados' as url_empleados %}
+                {% url 'servicios:lista_reservas' as url_reservas %}
+                {% url 'api:index' as url_api_docs %}
+                
+
+                <li class="nav-item"><a class="nav-link {% if request.path == '/servicios/' or '/servicios/inactivos' in request.path or '/servicios/nuevo' in request.path or '/servicios/editar' in request.path %}active{% endif %}" href="{{url_servicios}}">Servicios</a></li>
+                <li class="nav-item"><a class="nav-link {% if '/servicios/cliente' in request.path %}active{% endif %}" href="{{url_clientes}}">Clientes</a></li>
+                <li class="nav-item"><a class="nav-link {% if '/servicios/coordinador' in request.path %}active{% endif %}" href="{{url_coordinadores}}">Coordinadores</a></li>
+                <li class="nav-item"><a class="nav-link {% if '/servicios/empleado' in request.path %}active{% endif %}" href="{{url_empleados}}">Empleados</a></li>
+                <li class="nav-item"><a class="nav-link {% if '/servicios/reservas' in request.path %}active{% endif %}" href="{{url_reservas}}">Reservas</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/" target="_blank">Django Admin&#8599;</a></li>
+                <li class="nav-item"><a class="nav-link nav-api-btn {% if '/api/' in request.path %}active{% endif %}" href="{{url_api_docs}}">API Docs</a></li>
             </ul>
         </div>
     </div>

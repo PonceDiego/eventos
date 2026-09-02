@@ -1,3 +1,4 @@
+from django import forms
 from django.forms.widgets import DateTimeInput
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404, render
@@ -24,7 +25,7 @@ def home(request):
             filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
                      reservas_empleado__fecha_reserva__month=ahora.month)
         )
-    ).order_by('-total_reservas')[:5]
+    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
     for objetivo in objetivos:
         objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
     return render(request, 'home.html', {'servicios': servicios, 'objetivos': objetivos, 'ranking': ranking})
@@ -205,8 +206,13 @@ def custom_form(form):
 class ServicioUpdateView(UpdateView):
     model = Servicio
     fields = ['nombre', 'descripcion', 'precio', 'activo']
-    template_name = 'servicios/form.html'
+    template_name = 'servicios/form_servicio.html'
     success_url = reverse_lazy('servicios:listar')
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        form.fields['descripcion'].widget = forms.Textarea(attrs={'rows': 4, 'class': 'form-control'})
+        return form
 
 class ClienteUpdateView(UpdateView):
     model = Cliente
