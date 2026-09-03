@@ -11,6 +11,7 @@ from django.utils import timezone
 def home(request):
     servicios = Servicio.objects.filter(activo=True)
     ahora = timezone.now()
+
     objetivos = ObjetivoVenta.objects.filter(activo=True, servicio__activo=True).annotate(
         vendidos=Count(
             'servicio__reservas',
@@ -29,27 +30,18 @@ def home(request):
         )
     ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
 
-    destacado_mes = Empleado.objects.filter(activo=True).annotate(
-        total_reservas=Count(
-            'reservas_empleado',
-            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
-                     reservas_empleado__fecha_reserva__month=ahora.month)
-        )
-    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
-
-    destacado_anio = Empleado.objects.filter(activo=True).annotate(
+    ranking_anual = Empleado.objects.filter(activo=True).annotate(
         total_reservas=Count(
             'reservas_empleado',
             filter=Q(reservas_empleado__fecha_reserva__year=ahora.year)
         )
-    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
+    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
 
     return render(request, 'home.html', {
         'servicios': servicios,
         'objetivos': objetivos,
         'ranking': ranking,
-        'destacado_mes': destacado_mes,
-        'destacado_anio': destacado_anio,
+        'ranking_anual': ranking_anual,
     })
 # Views de listas
 
