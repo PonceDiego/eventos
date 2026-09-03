@@ -10,6 +10,13 @@ from servicios.models import Cliente, Servicio, Empleado, Coordinador, Cliente, 
 from datetime import timedelta
 from django.utils import timezone
 
+print("Limpiando datos antiguos...")
+ReservaServicios.objects.all().delete()
+Servicio.objects.all().delete()
+Cliente.objects.all().delete()
+Empleado.objects.all().delete()
+Coordinador.objects.all().delete()
+
 # 1. Crear 10 Servicios temáticos
 servicios_datos = [
     ("Fiesta de 15 Años", "Organización integral para quinceañeras, incluye DJ e iluminación.", 1200000.00),
@@ -24,12 +31,8 @@ servicios_datos = [
     ("Show en Vivo y DJ Set", "Estructura de sonido profesional, luces robóticas y DJ residente.", 500000.00),
 ]
 
-servicios = [
-    Servicio(nombre=nom, descripcion=desc, precio=prec)
-    for nom, desc, prec in servicios_datos
-]
-Servicio.objects.bulk_create(servicios)
-servicios_creados = list(Servicio.objects.all())
+servicios_objs = [Servicio(nombre=nom, descripcion=desc, precio=prec) for nom, desc, prec in servicios_datos]
+Servicio.objects.bulk_create(servicios_objs)
 
 NOMBRES = [
     "Lucas", "Mateo", "Sofía", "Valentina", "Joaquín", "Camila", "Benjamín", "Martina", 
@@ -52,7 +55,6 @@ empleados = [
     for i in range(1, 51)
 ]
 Empleado.objects.bulk_create(empleados)
-empleados_creados = list(Empleado.objects.all())
 
 coordinadores = [
     Coordinador(
@@ -63,7 +65,6 @@ coordinadores = [
     for _ in range(15)
 ]
 Coordinador.objects.bulk_create(coordinadores)
-coordinadores_creados = list(Coordinador.objects.all())
 
 DOMINIOS = ["gmail.com", "outlook.com", "yahoo.com", "events.com", "hotmail.com"]
 
@@ -85,27 +86,30 @@ for i in range(1, 51):
 
 Cliente.objects.bulk_create(clientes_a_crear)
 
-clientes_existentes = list(Cliente.objects.all())
 
-if not clientes_existentes:
-    print("Atención: No hay clientes en la base de datos. Se requiere al menos un cliente para asociar reservas.")
-else:
-    reservas = []
+print("Insertando Reservas...")
+clientes = list(Cliente.objects.all())
+servicios = list(Servicio.objects.all())
+empleados = list(Empleado.objects.all())
+coordinadores = list(Coordinador.objects.all())
+
+if clientes:
+    reservas_objs = []
     fecha_base = timezone.now()
 
-    for i, servicio in enumerate(servicios_creados):
-        # Distribuye fechas en los próximos 60 días
+    for servicio in servicios:
         fecha_evento = fecha_base + timedelta(days=random.randint(1, 60), hours=random.randint(10, 22))
-        
-        reservas.append(
+        reservas_objs.append(
             ReservaServicios(
-                cliente=random.choice(clientes_existentes),
+                cliente=random.choice(clientes),
                 servicio=servicio,
-                empleado=random.choice(empleados_creados),
-                coordinador=random.choice(coordinadores_creados),
+                empleado=random.choice(empleados),
+                coordinador=random.choice(coordinadores),
                 fecha_servicio=fecha_evento
             )
         )
-
-    ReservaServicios.objects.bulk_create(reservas)
+    ReservaServicios.objects.bulk_create(reservas_objs)
+    print("¡Población completada con éxito sin duplicados!")
+else:
+    print("Atención: No hay clientes cargados. Cargá clientes primero para generar las reservas.")
     print("¡Base de datos cargada exitosamente!")
