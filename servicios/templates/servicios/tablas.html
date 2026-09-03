@@ -1,0 +1,106 @@
+<style>
+    /* Altura máxima y scroll para el contenedor de la tabla */
+    .table-scroll-container {
+        max-height: 500px !important;
+        overflow-y: auto !important;
+        display: block !important;
+    }
+
+    /* Fija el thead arriba al hacer scroll */
+    .table-header-sticky th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: var(--color-primary) !important;
+        color: #ffffff;
+        box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tableContainer = document.querySelector('.table-scroll-container');
+  if (!tableContainer) return;
+
+  const table = tableContainer.querySelector('table');
+  if (!table) return;
+
+  const headers = table.querySelectorAll('th.sortable');
+  const tbody = table.querySelector('tbody');
+
+  // Helper para parsear el valor según el data-type o data-value
+  const parseCellValue = (cell, dataType) => {
+    if (!cell) return '';
+
+    // 1. Prioridad: atributo data-value explicito
+    if (cell.dataset.value) {
+      const rawVal = cell.dataset.value;
+      if (dataType === 'date') return Date.parse(rawVal) || 0;
+      if (dataType === 'number') return parseFloat(rawVal) || 0;
+      return rawVal.toLowerCase();
+    }
+
+    const text = cell.textContent.trim();
+
+    // 2. Parseo para fechas (DD/MM/YYYY HH:MM)
+    if (dataType === 'date') {
+      if (text.includes('/')) {
+        const [datePart, timePart] = text.split(' ');
+        const parts = datePart.split('/');
+        if (parts.length === 3) {
+          const isoString = `${parts[2]}-${parts[1]}-${parts[0]}${timePart ? 'T' + timePart : ''}`;
+          return Date.parse(isoString) || 0;
+        }
+      }
+      return Date.parse(text) || 0;
+    }
+
+    // 3. Parseo para precios / números
+    if (dataType === 'number' || text.includes('$')) {
+      const cleanNumber = text.replace(/[^0-9,-]/g, '').replace(',', '.');
+      return parseFloat(cleanNumber) || 0;
+    }
+
+    // 4. Texto plano por defecto
+    return text.toLowerCase();
+  };
+
+  headers.forEach((header, index) => {
+    let asc = true;
+
+    header.addEventListener('click', () => {
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const dataType = header.dataset.type || 'text';
+
+      // Resetear íconos de las otras columnas (Corregido '$' por '↕')
+      headers.forEach(h => {
+        const icon = h.querySelector('.sort-icon');
+        if (icon && h !== header) icon.textContent = '↕';
+      });
+
+      // Ordenamiento dinámico
+      rows.sort((rowA, rowB) => {
+        const valA = parseCellValue(rowA.children[index], dataType);
+        const valB = parseCellValue(rowB.children[index], dataType);
+
+        // Comparación numérica (Fechas en timestamp y Precios)
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          return asc ? valA - valB : valB - valA;
+        }
+
+        // Comparación de texto
+        return asc 
+          ? valA.toString().localeCompare(valB.toString(), undefined, { numeric: true, sensitivity: 'base' })
+          : valB.toString().localeCompare(valA.toString(), undefined, { numeric: true, sensitivity: 'base' });
+      });
+
+      // Re-insertar filas ordenadas
+      rows.forEach(row => tbody.appendChild(row));
+
+      // Cambiar sentido del ícono
+      asc = !asc;
+      const icon = header.querySelector('.sort-icon');
+      if (icon) icon.textContent = asc ? '▲' : '▼';
+    });
+  });
+});
+</script>
