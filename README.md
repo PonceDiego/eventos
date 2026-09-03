@@ -1,31 +1,67 @@
-## Guía de Worflow Git
-A la hora de desarrollar se apunta a `develop`, mientras que `master` se reserva únicamente para versiones estables de producción.
+# EventsApp - Sistema de Gestión de Reservas de Eventos
+Desarrollado en Django para Alkemy 2026 - Grupo número 1
 
-## Convención para Nombres de Ramas de trabajo
-* **Nuevas funcionalidades:** `feature/descripcion-corta` (ej. `feature/nombre-tarea`)
-* **Corrección de errores:** `fix/descripcion-corta` (ej. `fix/error-login`)
 ---
 
-### 🚀 Flujo de Trabajo Diario
+### Requisitos
+Tener instalados Python y Git.
+* **Python 3.10+**
+* **Git**
 
-#### 1. Iniciar desde `develop`
-Asegurarse de obtener siempre los últimos cambios antes de crear la rama:
-```bash
-git checkout develop
-git pull origin develop
-git checkout -b feature/nombre-de-tu-rama
-```
+  ---
 
-#### 2. Guardar y subir cambios
-Escribir mensajes de commit claros con el siguiente formato
+## Instrucciones de instalación y puesta en marcha.
+
+### 1. Clonar el respositorio
+  
+  ```bash
+  git clone https://github.com/PonceDiego/eventos
+  cd eventos
+  ```
+
+### 2. Crear y activar entorno virtual
+* Windows (PowerShell/CMD)
+  ```bash
+  python -m venv venv
+  .\venv\Scripts\activate
+  ```
+* Linux/MacOS
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
+
+ ### 3. Dependencias
+  Instalar las dependencias necesarias
+    ```bash
+    pip install -r requirements.txt
+    ```
+### 4. Migraciones
+  Migrar las estructuras de la base de datos
+  ```bash
+  python manage.py migrate
+  ```
+### 5. Crear Superusuario
+  Usuario para acceder a Django Admin (/admin)
 ```bash
-git add .
-git commit -m "feat: CRUD de Servicios"
-git push -u origin featrure/nombre-de-tu-rama
+python manage.py createsuperuser
 ```
-#### 3. Abrir un PullRequest (PR)
-* Crear PullRequest en GitHub
-* **Base(destino): `develop` $\leftarrow$ Compare (origin): `feature/nombre-de-tu-rama`.**
-* Solicitar la revisión.
-* Tras la aprobación y verificación de pruebas, hacer **Squash and Merge**
-* Eliminar la rama remota en GitHub
+### 6. Poblar Base de datos
+  Script de carga masiva para generar registros iniciales (Clientes, Servicios, Empleados, Coordinadores y Reservas)
+```bash
+python seed_data.py
+```
+> [!TIP]
+> También se puede correr a través del shell de Django con `python manage.py shell < seed_data.py`.
+
+### 7. Iniciar Servidor
+```bash
+python manage.py runserver
+```
+### 8. Visitar Web
+  Abrir el navegador y acceder a http://127.0.0.1:8000/
+
+## Estructura del proyecto
+* `servicios/`: Aplicación principal.
+* `api/`: Endpoints disponibles (Django-REST).
+  
