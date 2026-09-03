@@ -18,6 +18,8 @@ def home(request):
                      servicio__reservas__fecha_reserva__month=ahora.month)
         )
     )
+    for objetivo in objetivos:
+        objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
 
     ranking = Empleado.objects.filter(activo=True).annotate(
         total_reservas=Count(
@@ -26,9 +28,29 @@ def home(request):
                      reservas_empleado__fecha_reserva__month=ahora.month)
         )
     ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
-    for objetivo in objetivos:
-        objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
-    return render(request, 'home.html', {'servicios': servicios, 'objetivos': objetivos, 'ranking': ranking})
+
+    destacado_mes = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
+                     reservas_empleado__fecha_reserva__month=ahora.month)
+        )
+    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
+
+    destacado_anio = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year)
+        )
+    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
+
+    return render(request, 'home.html', {
+        'servicios': servicios,
+        'objetivos': objetivos,
+        'ranking': ranking,
+        'destacado_mes': destacado_mes,
+        'destacado_anio': destacado_anio,
+    })
 # Views de listas
 
 # Listar solo los activos
@@ -144,7 +166,9 @@ class ClienteCreateView(CreateView):
     model = Cliente
     template_name = 'servicios/form_cliente.html'
     fields = ['nombre' , 'apellido' , 'contacto']
-    success_url = reverse_lazy('servicios:lista_cliente')
+
+    def get_success_url(self):
+        return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
 
 class CoordinadorCreateView(CreateView):
     model = Coordinador
@@ -169,6 +193,10 @@ class ReservaCreateView(CreateView):
         servicio_id = self.request.GET.get('servicio_id')
         if servicio_id:
             initial['servicio'] = servicio_id
+
+        cliente_id = self.request.GET.get('cliente_id')
+        if cliente_id:
+            initial['cliente'] = cliente_id
         return initial
 
     def get_form(self, form_class = None):
