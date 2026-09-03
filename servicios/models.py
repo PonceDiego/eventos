@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Servicio(models.Model):
@@ -81,6 +82,12 @@ class ObjetivoVenta(models.Model):
     class Meta:
         verbose_name = 'Objetivo de venta'
         verbose_name_plural = 'Objetivos de venta'
+
+    def clean(self):
+        if self.activo:
+            activos = ObjetivoVenta.objects.filter(activo=True).exclude(pk=self.pk)
+            if activos.count() >= 5:
+                raise ValidationError('Ya hay 5 objetivos activos. Desactivá alguno antes de crear uno nuevo.')
 
     def __str__(self):
         return f'{self.servicio.nombre} - Meta: {self.meta}'
