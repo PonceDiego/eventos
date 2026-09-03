@@ -1,19 +1,61 @@
+from django import forms
+from django.forms.widgets import DateTimeInput
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
-from .models import Servicio ,Cliente
+from django.shortcuts import redirect, get_object_or_404, render
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, View , DetailView
+from .models import Servicio, Cliente, Coordinador , Empleado, ReservaServicios , ObjetivoVenta
+from django.db.models import Count, Q
+from django.utils import timezone
 
+# Landing Page
+def home(request):
+    servicios = Servicio.objects.filter(activo=True)
+    ahora = timezone.now()
 
+    objetivos = ObjetivoVenta.objects.filter(activo=True, servicio__activo=True).annotate(
+        vendidos=Count(
+            'servicio__reservas',
+            filter=Q(servicio__reservas__fecha_reserva__year=ahora.year,
+                     servicio__reservas__fecha_reserva__month=ahora.month)
+        )
+    )
+    for objetivo in objetivos:
+        objetivo.restante = max(objetivo.meta - objetivo.vendidos, 0)
 
+    ranking = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
+                     reservas_empleado__fecha_reserva__month=ahora.month)
+        )
+    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
+
+    ranking_anual = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year)
+        )
+    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
+
+    return render(request, 'home.html', {
+        'servicios': servicios,
+        'objetivos': objetivos,
+        'ranking': ranking,
+        'ranking_anual': ranking_anual,
+    })
 # Views de listas
 
 # Listar solo los activos
 class ServicioListView(ListView):
     model = Servicio
-    template_name = 'servicios/listar_servicios.html'
+    template_name = 'servicios/lista_servicios.html'
     context_object_name = 'servicios'
     def get_queryset(self):
         return Servicio.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
     
 class ClienteListView(ListView):
     model = Cliente
@@ -21,51 +63,204 @@ class ClienteListView(ListView):
     context_object_name = 'clientes'
     def get_queryset(self):
         return Cliente.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
+
+class CoordinadorListView(ListView):
+    model = Coordinador
+    template_name = 'servicios/lista_coordinadores.html'
+    context_object_name = 'coordinadores'
+    def get_queryset(self):
+        return Coordinador.objects.filter(activo = True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
+
+class EmpleadoListView(ListView):
+    model = Empleado
+    template_name = 'servicios/lista_empleados.html'
+    context_object_name = 'empleados'
+    def get_queryset(self):
+        return Empleado.objects.filter(activo=True)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = False
+        return context
+
 
 # Listar inactivos
 class ServicioInactivosListView(ListView):
     model = Servicio
-    template_name = 'servicios/inactivos.html'
+    template_name = 'servicios/lista_servicios.html'
     context_object_name = 'servicios'
 
     def get_queryset(self):
         return Servicio.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
 
 class ClienteInactivoListView(ListView):
     model = Cliente
-    template_name = 'servicios/clientes_inactivos.html'
+    template_name = 'servicios/lista_clientes.html'
     context_object_name = 'clientes'
 
     def get_queryset(self):
         return Cliente.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
 
-# Views de creación, edición, eliminación y restauración
+class CoordinadorInactivoListView(ListView):
+    model = Coordinador
+    template_name = 'servicios/lista_coordinadores.html'
+    context_object_name = 'coordinadores'
+
+    def get_queryset(self):
+        return Coordinador.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
+
+class EmpleadoInactivoListView(ListView):
+    model = Coordinador
+    template_name = 'servicios/lista_empleados.html'
+    context_object_name = 'empleados'
+
+    def get_queryset(self):
+        return Empleado.objects.filter(activo=False)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['es_inactivo'] = True
+        return context
+
+class ReservaListView(ListView):
+    model = ReservaServicios
+    template_name = 'servicios/lista_reservas.html'
+    context_object_name = 'reservas'
+
+# Views de creación, edición, eliminación y restauración cliente
 
 #Creación
 class ServicioCreateView(CreateView):
     model = Servicio
-    template_name = 'servicios/form.html'
+    template_name = 'servicios/form_servicio.html'
     fields = ['nombre', 'descripcion', 'precio']
     success_url = reverse_lazy('servicios:listar')
 
 class ClienteCreateView(CreateView):
     model = Cliente
-    template_name = 'servicios/formcliente.html'
+    template_name = 'servicios/form_cliente.html'
     fields = ['nombre' , 'apellido' , 'contacto']
-    success_url = reverse_lazy('servicios:lista_cliente')
+
+    def get_success_url(self):
+        return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
+
+class CoordinadorCreateView(CreateView):
+    model = Coordinador
+    template_name = 'servicios/form_coordinador.html'
+    fields = ['nombre', 'apellido' ,'dni']
+    success_url = reverse_lazy('servicios:lista_coordinador')
+
+class EmpleadoCreateView(CreateView):
+    model = Empleado
+    template_name = 'servicios/form_empleado.html'
+    fields = ['nombre' , 'apellido' , 'legajo']
+    success_url = reverse_lazy('servicios:lista_empleados')
+
+class ReservaCreateView(CreateView):
+    model = ReservaServicios
+    template_name = 'servicios/form_reserva.html'
+    success_url = reverse_lazy('servicios:lista_reservas')
+    fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
+
+    def get_initial(self):
+        initial = super().get_initial()
+        servicio_id = self.request.GET.get('servicio_id')
+        if servicio_id:
+            initial['servicio'] = servicio_id
+
+        cliente_id = self.request.GET.get('cliente_id')
+        if cliente_id:
+            initial['cliente'] = cliente_id
+        return initial
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        return custom_form(form)
+    
+def custom_form(form):
+    form.fields['fecha_servicio'].widget = DateTimeInput(
+        attrs={
+            'type' : 'datetime-local',
+            'class' : 'form-control'
+        }
+    )
+
+    select_fields = {
+        'cliente' : 'Seleccione un Cliente',
+        'servicio' : 'Seleccione un Servicio',
+        'empleado' : 'Selecciones un Empleado',
+        'coordinador' : 'Seleccione un Coordinador',
+    }
+    for field, placeholder in select_fields.items():
+        form.fields[field].widget.attrs.update({'class' : 'form-select'})
+        form.fields[field].empty_label = f"- {placeholder} -"
+
+    # Filtrar solo activos
+    form.fields['cliente'].queryset = Cliente.objects.filter(activo=True)
+    form.fields['servicio'].queryset = Servicio.objects.filter(activo=True)
+    form.fields['empleado'].queryset = Empleado.objects.filter(activo=True)
+    form.fields['coordinador'].queryset = Coordinador.objects.filter(activo=True)
+
+    return form
 
 #Edición
+
 class ServicioUpdateView(UpdateView):
     model = Servicio
     fields = ['nombre', 'descripcion', 'precio', 'activo']
-    template_name = 'servicios/form.html'
+    template_name = 'servicios/form_servicio.html'
     success_url = reverse_lazy('servicios:listar')
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        form.fields['descripcion'].widget = forms.Textarea(attrs={'rows': 4, 'class': 'form-control'})
+        return form
 
 class ClienteUpdateView(UpdateView):
     model = Cliente
-    template_name = 'servicios/formcliente.html'
+    template_name = 'servicios/form_cliente.html'
     fields = ['nombre' , 'apellido' , 'contacto', 'activo']
     success_url = reverse_lazy('servicios:lista_cliente')
+
+class CoordinadorUpdateView(UpdateView):
+    model = Coordinador
+    template_name = 'servicios/form_coordinador.html'
+    fields = ['nombre', 'apellido' ,'dni', 'activo']
+    success_url = reverse_lazy('servicios:lista_coordinador')
+
+class EmpleadoUpdateView(UpdateView):
+    model= Empleado
+    template_name = 'servicios/form_empleado.html'
+    fields = ['nombre' , 'apellido' , 'legajo', 'activo']
+    success_url = reverse_lazy('servicios:lista_empleados')
+
+class ReservaUpdateView(UpdateView):
+    model = ReservaServicios
+    template_name = 'servicios/form_reserva.html'
+    success_url = reverse_lazy('servicios:lista_reservas')
+    fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
+
+    def get_form(self, form_class = None):
+        form = super().get_form(form_class)
+        return custom_form(form)
 
 #Baja Lógica
 class ServicioBajaLogicaView(View):
@@ -81,6 +276,20 @@ class ClienteBajaLogicaView(View):
         cliente.activo = False
         cliente.save()
         return redirect('servicios:lista_cliente')
+
+class CoordinadorBajaLogicaView(View):
+    def post(self,request,pk):
+        coordinador = get_object_or_404(Coordinador , pk=pk)
+        coordinador.activo= False
+        coordinador.save()
+        return redirect('servicios:lista_coordinador')
+
+class EmpleadoBajaLogicaView(View):
+    def post(self,request,pk):
+        empleado = get_object_or_404(Empleado , pk=pk)
+        empleado.activo= False
+        empleado.save()
+        return redirect('servicios:lista_empleados')
     
 #Restauración (active = False -> True)
 class ServicioRestaurarView(View):
@@ -96,3 +305,32 @@ class ClienteRestaurarView(View):
         cliente.activo = True
         cliente.save()
         return redirect('servicios:cliente_inactivo')
+
+
+class CoordinadorRestaurarView(View):
+    def post(self , request , pk):
+        coordinador = get_object_or_404(Coordinador , pk=pk)
+        coordinador.activo=True
+        coordinador.save()
+        return redirect('servicios:coordinador_inactivo')
+
+class EmpleadoRestaurarView(View):
+    def post(self , request , pk):
+        empleado = get_object_or_404(Empleado , pk=pk)
+        empleado.activo=True
+        empleado.save()
+        return redirect('servicios:empleado_inactivo')
+
+# Baja real
+class ReservaDeleteView(DeleteView):
+    model = ReservaServicios
+    template_name = 'servicios/reserva_confirmar.html'
+    success_url = reverse_lazy('servicios:lista_reservas')
+
+
+#DETALLE
+
+class ServicioDetailView(DetailView):
+    model = Servicio
+    template_name = 'servicios/detalle_servicio.html'
+    context_object_name = 'servicio'

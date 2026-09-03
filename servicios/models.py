@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Servicio(models.Model):
@@ -28,11 +30,64 @@ class Cliente(models.Model):
         return f'{self.nombre} {self.apellido}'
 
 
-class Coordinadores(models.Model):
-    pass
+class Coordinador(models.Model):
+    nombre = models.CharField('Nombre', max_length=50)
+    apellido = models.CharField("Apellido", max_length=50)
+    dni = models.IntegerField('Dni' )
+    fecha_alta = models.DateTimeField('Fecha_Alta' , auto_now_add=True)
+    activo = models.BooleanField('Activo', default=True)
 
-class Empleados(models.Model):
-    pass
+    class Meta:
+        verbose_name = 'Coordinador'
+        verbose_name_plural  = 'coordinadores'
 
-class ReservasServicios(models.Model):
-    pass
+    def __str__(self) :
+        return f'{self.nombre} {self.apellido}'
+
+
+class Empleado(models.Model):
+    nombre = models.CharField('Nombre' , max_length=50)
+    apellido = models.CharField('Apellido' , max_length=50)
+    legajo = models.IntegerField('Legajo')
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Empleado'
+        verbose_name_plural  = 'empleados'
+
+    def __str__(self) :
+        return f'{self.nombre} {self.apellido}'
+
+class ReservaServicios(models.Model):
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, related_name = 'reservas')
+    servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE, related_name= 'reservas')
+    empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE, related_name='reservas_empleado')
+    coordinador = models.ForeignKey('Coordinador', on_delete=models.CASCADE, related_name='reservas_coordinador')
+    fecha_reserva = models.DateTimeField(auto_now_add=True)
+    fecha_servicio = models.DateTimeField()
+
+    class Meta:
+        verbose_name = 'Reserva'
+        verbose_name_plural = 'Reservas'
+
+    def __str__(self):
+        return f"Reserva de {self.servicio} - {self.cliente} - ({self.fecha_reserva.strftime('%dd/%mm/%YYYY')})"
+
+
+class ObjetivoVenta(models.Model):
+    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, related_name='objetivos')
+    meta = models.PositiveIntegerField('Meta de ventas', validators=[MinValueValidator(1)])
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Objetivo de venta'
+        verbose_name_plural = 'Objetivos de venta'
+
+    def clean(self):
+        if self.activo:
+            activos = ObjetivoVenta.objects.filter(activo=True).exclude(pk=self.pk)
+            if activos.count() >= 5:
+                raise ValidationError('Ya hay 5 objetivos activos. Desactivá alguno antes de crear uno nuevo.')
+
+    def __str__(self):
+        return f'{self.servicio.nombre} - Meta: {self.meta}'

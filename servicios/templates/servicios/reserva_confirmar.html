@@ -1,0 +1,24 @@
+{% extends 'servicios/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Confirmar Eliminación</h5>
+            </div>
+            <div class="card-body">
+                <p>¿Estás seguro de que deseas eliminar permanentemente la reserva <strong>#{{ object.fecha_reserva }} - cliente: {{ object.cliente }} - fecha del servicio: {{ object.fecha_servicio }}</strong>?</p>
+                <p class="text-muted small">Esta acción ejecutará un DELETE directo en la base de datos y no se podrá recuperar.</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'servicios:lista_reservas' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">Si, Eliminar Definitivamente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,65 +1,71 @@
 {% extends 'servicios/base.html' %}
 
-{% block title %}Clientes{% endblock %}
+{% block title %}Coordinadores{% endblock %}
 {% block content %}
 {% include 'servicios/tablas.html' %}
-{% url 'servicios:cliente_inactivo' as url_inactivos %}
-{% url 'servicios:lista_cliente' as url_activos %}
+{% url 'servicios:coordinador_inactivo' as url_inactivos %}
+{% url 'servicios:lista_coordinador' as url_activos %}
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 gap-sm-3 mb-3">
-    <h2 class="mb-0">Clientes {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
+
+    <h2 class="mb-0">Coordinadores {% if es_inactivo %}Inactivos{% else %}Activos{% endif %}</h2>
+
     <div class="d-flex align-items-center gap-3 w-100 w-sm-auto justify-content-between justify-content-sm-end">
         <!-- Switch para alternar entre activos e inactivos -->
         <div class="form-check form-switch m-0">
-            <input class="form-check-input" 
-                   type="checkbox" 
-                   role="switch" 
-                   id="switchClientesInactivos" 
+            <input class="form-check-input"
+                   type="checkbox"
+                   role="switch"
+                   id="switchCoordinadoresInactivos"
                    {% if es_inactivo %}checked{% endif %}
                    onchange="location.href = this.checked ? '{{ url_inactivos }}' : '{{ url_activos }}';">
-            <label class="form-check-label fw-bold" for="switchClientesInactivos">
+            <label class="form-check-label fw-bold" for="switchCoordinadoresInactivos">
                 Inactivos
             </label>
         </div>
 
-        <a href="{% url 'servicios:cliente_nuevo' %}" class="btn btn-primary">Nuevo Cliente</a>
+        <a href="{% url 'servicios:coordinador_nuevo' %}" class="btn btn-primary">Nuevo Coordinador</a>
     </div>
 </div>
 
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-        <div class="table-scroll-container">
+            <div class="table-scroll-container">
                 <table class="table table-hover mb-0 align-middle">
                     <thead class="table-header-sticky">
                         <tr>
                             <th class="sortable" data-type="text" style="cursor: pointer;">
-                        Nombre <span class="sort-icon opacity-50">↕</span>
+                            Nombre <span class="sort-icon opacity-50 ms-1">↕</span>
                         </th>
                             <th class="sortable" data-type="text" style="cursor: pointer;">
-                            Apellido <span class="sort-icon opacity-50">↕</span>
-                            </th>
-                            <th>Contacto</th>
+                            Apellido <span class="sort-icon opacity-50 ms-1">↕</span>
+                        </th>
+                            <th>DNI</th>
+                            <th class="sortable" data-type="text" style="cursor: pointer;">
+                            Fecha Alta <span class="sort-icon opacity-50 ms-1">↕</span>
+                        </th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for c in clientes %}
+                        {% for x in coordinadores %}
                         <tr>
-                            <td class="fw-semibold">{{ c.nombre }}</td>
-                            <td>{{ c.apellido }}</td>
-                            <td>{{ c.contacto }}</td>
+                            <td class="fw-semibold">{{ x.nombre }}</td>
+                            <td>{{ x.apellido }}</td>
+                            <td>{{ x.dni }}</td>
+                            <td>{{ x.fecha_alta }}</td>
 
                             <td class="text-end">
                             {% if es_inactivo %}
-                            <form action="{% url 'servicios:cliente_restaurar' c.pk %}" method="POST" class="d-inline">
+                            <form action="{% url 'servicios:coordinador_restaurar' x.pk %}" method="POST" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
                             </form>
                             {% else %}
 
-                                <a href="{% url 'servicios:cliente_editar' c.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
-                                <form action="{% url 'servicios:cliente_eliminar' c.pk %}" method="POST" class="d-inline">
+                                <a href="{% url 'servicios:coordinador_editar' x.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
+                                <form action="{% url 'servicios:coordinador_eliminar' x.pk %}" method="POST" class="d-inline">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                                 </form>
@@ -68,14 +74,13 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="text-center py-4 text-muted">
-                                No hay clientes {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No hay coordinadores {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                </div>
             </div>
         </div>
     </div>

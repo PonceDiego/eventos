@@ -1,0 +1,27 @@
+{% extends 'servicios/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}{% if object %}Editar{% else %}Nuevo{% endif %} Cliente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-10 col-xl-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h3 class="fw-bold mb-4 text-center text-sm-start">{% if object %}Editar{% else %}Nuevo{% endif %} Cliente</h3>
+
+        <form method="POST">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="{% url 'servicios:lista_cliente' %}" class="btn btn-secondary w-sm-auto">Cancelar</a>
+            {% bootstrap_button button_type="submit" content="Guardar" button_class="btn-primary w-sm-auto" %}
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
