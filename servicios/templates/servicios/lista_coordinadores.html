@@ -2,6 +2,7 @@
 
 {% block title %}Coordinadores{% endblock %}
 {% block content %}
+{% include 'servicios/tablas.html' %}
 {% url 'servicios:coordinador_inactivo' as url_inactivos %}
 {% url 'servicios:lista_coordinador' as url_activos %}
 
@@ -30,49 +31,57 @@
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0 align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>DNI</th>
-                        <th>Fecha Alta</th>
-                        <th class="text-end">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in coordinadores %}
-                    <tr>
-                        <td class="fw-semibold">{{ x.nombre }}</td>
-                        <td>{{ x.apellido }}</td>
-                        <td>{{ x.dni }}</td>
-                        <td>{{ x.fecha_alta }}</td>
+            <div class="table-scroll-container">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-header-sticky">
+                        <tr>
+                            <th class="sortable" data-type="text" style="cursor: pointer;">
+                            Nombre <span class="sort-icon opacity-50 ms-1">↕</span>
+                        </th>
+                            <th class="sortable" data-type="text" style="cursor: pointer;">
+                            Apellido <span class="sort-icon opacity-50 ms-1">↕</span>
+                        </th>
+                            <th>DNI</th>
+                            <th class="sortable" data-type="text" style="cursor: pointer;">
+                            Fecha Alta <span class="sort-icon opacity-50 ms-1">↕</span>
+                        </th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in coordinadores %}
+                        <tr>
+                            <td class="fw-semibold">{{ x.nombre }}</td>
+                            <td>{{ x.apellido }}</td>
+                            <td>{{ x.dni }}</td>
+                            <td>{{ x.fecha_alta }}</td>
 
-                        <td class="text-end">
-                        {% if es_inactivo %}
-                        <form action="{% url 'servicios:coordinador_restaurar' x.pk %}" method="POST" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
-                        </form>
-                        {% else %}
-
-                            <a href="{% url 'servicios:coordinador_editar' x.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
-                            <form action="{% url 'servicios:coordinador_eliminar' x.pk %}" method="POST" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            <td class="text-end">
+                            {% if es_inactivo %}
+                            <form action="{% url 'servicios:coordinador_restaurar' x.pk %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
                             </form>
-                        {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-4 text-muted">
-                            No hay coordinadores {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                            {% else %}
+
+                                <a href="{% url 'servicios:coordinador_editar' x.pk %}" class="btn btn-sm btn-warning me-1">Editar</a>
+                                <form action="{% url 'servicios:coordinador_eliminar' x.pk %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                                </form>
+                            {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No hay coordinadores {% if es_inactivo %}inactivos{% else %}activos{% endif %}.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

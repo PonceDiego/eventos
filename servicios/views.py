@@ -30,18 +30,27 @@ def home(request):
         )
     ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
 
-    ranking_anual = Empleado.objects.filter(activo=True).annotate(
+    destacado_mes = Empleado.objects.filter(activo=True).annotate(
+        total_reservas=Count(
+            'reservas_empleado',
+            filter=Q(reservas_empleado__fecha_reserva__year=ahora.year,
+                     reservas_empleado__fecha_reserva__month=ahora.month)
+        )
+    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
+
+    destacado_anio = Empleado.objects.filter(activo=True).annotate(
         total_reservas=Count(
             'reservas_empleado',
             filter=Q(reservas_empleado__fecha_reserva__year=ahora.year)
         )
-    ).filter(total_reservas__gt=0).order_by('-total_reservas')[:5]
+    ).filter(total_reservas__gt=0).order_by('-total_reservas').first()
 
     return render(request, 'home.html', {
         'servicios': servicios,
         'objetivos': objetivos,
         'ranking': ranking,
-        'ranking_anual': ranking_anual,
+        'destacado_mes': destacado_mes,
+        'destacado_anio': destacado_anio,
     })
 # Views de listas
 
