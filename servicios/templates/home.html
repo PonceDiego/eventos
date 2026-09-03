@@ -3,112 +3,194 @@
 {% block content %}
 
 <div class="row g-4 mt-2">
-  <div class="col-12 col-lg-3">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body p-4">
-        <h4 class="fw-bold text-center text-primary-custom mb-4">Empleados Destacados</h4>
-        <hr class="my-3">
-        {% if ranking %}
-        <ul class="list-group list-group-flush">
-          {% for empleado in ranking %}
-          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span><span class="fw-bold me-2">#{{ forloop.counter }}</span>{{ empleado }}</span>
-            <span class="badge bg-primary rounded-pill">{{ empleado.total_reservas }} reservas</span>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p class="text-muted text-center small mb-0">No hay datos disponibles.</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+    <div class="col-12 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold text-center text-primary-custom mb-4">Empleados Destacados</h4>
+                <hr class="my-3">
+                <div id="carruselEmpleados" class="carousel slide" data-bs-ride="carousel">
 
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="d-flex align-items-center justify-content-center position-relative mb-2">
+                                <button
+                                        class="carousel-control-prev position-static"
+                                        type="button"
+                                        data-bs-target="#carruselEmpleados"
+                                        data-bs-slide="prev"
+                                        style="width: 35px; height: 30px;">
 
-  <div class="col-12 col-lg-6 position-relative z-1">
-    <div class="card border-primary border-opacity-25 shadow p-2"
-      style="transform: scale(1.03); background-color: #ffffff;">
-      <div class="card-body p-4 p-md-5">
-        <h3 class="fw-bold text-center text-primary-custom mb-2">Accesos Rápidos</h3>
-        <hr class="my-3">
+          <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                  style="width: 18px; height: 18px;">
+          </span>
 
-        <div class="d-flex flex-column gap-3">
-          <!-- Botón Nueva Reserva -->
-          <a href="{% url 'servicios:reserva_nuevo' %}" class="btn btn-primary py-3 fw-bold fs-5 shadow-sm text-center">
-            Nueva Reserva
-          </a>
-
-          <!-- Botón Nuevo Cliente -->
-          <a href="{% url 'servicios:cliente_nuevo' %}" class="btn btn-outline-primary py-3 fw-bold fs-5 text-center">
-            Nuevo Cliente
-          </a>
+                                    <span class="visually-hidden">
+            Anterior
+          </span>
+                                </button>
+                                <p class="text-center small text-muted mb-0 flex-grow-1">
+                                    Ranking del Mes
+                                </p>
+                                <button
+                                        class="carousel-control-next position-static"
+                                        type="button"
+                                        data-bs-target="#carruselEmpleados"
+                                        data-bs-slide="next"
+                                        style="width: 35px; height: 30px;">
+          <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                  style="width: 18px; height: 18px;">
+          </span>
+                                    <span class="visually-hidden">
+            Siguiente
+          </span>
+                                </button>
+                            </div>
+                            {% if ranking %}
+                            <ul class="list-group list-group-flush">
+                                {% for empleado in ranking %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+          <span>
+            <span class="fw-bold me-2">
+              #{{ forloop.counter }}
+            </span>
+            {{ empleado }}
+          </span>
+                                    <span class="badge bg-primary rounded-pill">
+            {{ empleado.total_reservas }}
+          </span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted text-center small mb-0">
+                                No hay datos disponibles.
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="carousel-item">
+                            <div class="d-flex align-items-center justify-content-center position-relative mb-2">
+                                <button
+                                        class="carousel-control-prev position-static"
+                                        type="button"
+                                        data-bs-target="#carruselEmpleados"
+                                        data-bs-slide="prev"
+                                        style="width: 35px; height: 30px;">
+          <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                  style="width: 18px; height: 18px;">
+          </span>
+                                    <span class="visually-hidden">
+            Anterior
+          </span>
+                                </button>
+                                <p class="text-center small text-muted mb-0 flex-grow-1">
+                                    Ranking del Año
+                                </p>
+                                <button
+                                        class="carousel-control-next position-static"
+                                        type="button"
+                                        data-bs-target="#carruselEmpleados"
+                                        data-bs-slide="next"
+                                        style="width: 35px; height: 30px;">
+          <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                  style="width: 18px; height: 18px;">
+          </span>
+                                    <span class="visually-hidden">
+            Siguiente
+          </span>
+                                </button>
+                            </div>
+                            {% if ranking_anual %}
+                            <ul class="list-group list-group-flush">
+                                {% for empleado in ranking_anual %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+          <span>
+            <span class="fw-bold me-2">
+              #{{ forloop.counter }}
+            </span>
+            {{ empleado }}
+          </span>
+                                    <span class="badge bg-info rounded-pill">
+            {{ empleado.total_reservas }}
+          </span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted text-center small mb-0">
+                                No hay datos disponibles.
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
 
+    <div class="col-12 col-lg-6 position-relative z-1">
+        <div class="card border-primary border-opacity-25 shadow p-2"
+             style="transform: scale(1.03); background-color: #ffffff;">
+            <div class="card-body p-4 p-md-5">
+                <h3 class="fw-bold text-center text-primary-custom mb-2">Accesos Rápidos</h3>
+                <hr class="my-3">
 
-  <!-- Objetivos -->
-  <div class="col-12 col-lg-3">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body p-4">
-        <h4 class="fw-bold text-center text-primary-custom mb-4">Objetivos Actuales</h4>
-        <hr class="my-3">
+                <div class="d-flex flex-column gap-3">
+                    <!-- Botón Nueva Reserva -->
+                    <a href="{% url 'servicios:reserva_nuevo' %}"
+                       class="btn btn-primary py-3 fw-bold fs-5 shadow-sm text-center">
+                        Nueva Reserva
+                    </a>
 
-        {% if objetivos %}
-        <div class="d-flex flex-column gap-3">
-          {% for objetivo in objetivos %}
-          <div>
-            <a href="{% url 'servicios:detalle' objetivo.servicio.pk %}" class="text-decoration-none text-dark">
-              <h6 class="fw-bold mb-1">{{ objetivo.servicio.nombre }}</h6>
-              <p class="text-muted small mb-1">{{ objetivo.vendidos }} / {{ objetivo.meta }} vendidos</p>
-              <div class="progress" style="height: 8px;">
-                <div class="progress-bar bg-success" role="progressbar"
-                  style="width: {% widthratio objetivo.vendidos objetivo.meta 100 %}%;"></div>
-              </div>
-            </a>
-          </div>
-          {% endfor %}
+                    <!-- Botón Nuevo Cliente -->
+                    <a href="{% url 'servicios:cliente_nuevo' %}"
+                       class="btn btn-outline-primary py-3 fw-bold fs-5 text-center">
+                        Nuevo Cliente
+                    </a>
+                </div>
+            </div>
         </div>
-        {% else %}
-        <p class="text-muted text-center small mb-0">No hay objetivos fijados.</p>
-        {% endif %}
-      </div>
     </div>
-  </div>
+
+
+    <!-- Objetivos -->
+    <div class="col-12 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+                <h4 class="fw-bold text-center text-primary-custom mb-4">Objetivos Actuales</h4>
+                <hr class="my-3">
+
+                {% if objetivos %}
+                <div class="d-flex flex-column gap-3">
+                    {% for objetivo in objetivos %}
+                    <div>
+                        <a href="{% url 'servicios:detalle' objetivo.servicio.pk %}"
+                           class="text-decoration-none text-dark">
+                            <h6 class="fw-bold mb-1">{{ objetivo.servicio.nombre }}</h6>
+                            <p class="text-muted small mb-1">{{ objetivo.vendidos }} / {{ objetivo.meta }} vendidos</p>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: {% widthratio objetivo.vendidos objetivo.meta 100 %}%;"></div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center small mb-0">No hay objetivos fijados.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
-{% if destacado_mes or destacado_anio %}
-<div class="row justify-content-center mt-5">
-  <div class="col-md-8 col-lg-6">
-    <div class="row g-3">
-      {% if destacado_mes %}
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm h-100 text-center bg-warning-subtle">
-          <div class="card-body">
-            <p class="mb-1">Empleado del Mes</p>
-            <h5 class="fw-bold mb-1">{{ destacado_mes.nombre }} {{ destacado_mes.apellido }}</h5>
-            <span class="badge bg-warning text-dark">{{ destacado_mes.total_reservas }} reservas</span>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-
-      {% if destacado_anio %}
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm h-100 text-center bg-info-subtle">
-          <div class="card-body">
-            <p class="mb-1">Empleado del Año</p>
-            <h5 class="fw-bold mb-1">{{ destacado_anio.nombre }} {{ destacado_anio.apellido }}</h5>
-            <span class="badge bg-info text-dark">{{ destacado_anio.total_reservas }} reservas</span>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% endif %}
 
 {% endblock %}
