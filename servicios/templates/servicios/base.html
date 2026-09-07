@@ -145,15 +145,17 @@
             align-items: center;
         }
 
-        .navbar-brand:hover {
+        .navbar-brand:hover .navbar-logo{
             transform: scale(1.08);
         }
 
         .navbar-logo {
-            height: 48px;
+            height: auto;
+            max-height: 120px;
             width: auto;
             object-fit: contain;
-            margin-right: -12px !important;
+            mix-blend-mode: screen;
+            transition: transform 0.2s ease;
         }
 
         /* Estilos Footer */
@@ -171,7 +173,7 @@
 
         .footer-logo-img {
             height: auto;
-            max-height: 150px;
+            max-height: 120px;
             width: auto;
             object-fit: contain;
             mix-blend-mode: screen;
@@ -354,8 +356,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm py-2 py-md-3">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-                <img src="{% static 'servicios/logo_e.png' %}" alt="Logo EventosApp" class="navbar-logo me-1">
-                <span class="fw-bold tracking-tight">EventosApp</span>
+                <img src="{% static 'servicios/eventosfooter.png' %}" alt="Logo EventosApp" class="navbar-logo me-1">
+
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
