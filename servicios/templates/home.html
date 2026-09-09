@@ -137,21 +137,21 @@
 
 
     <div class="col-12 col-lg-6 position-relative z-1">
-        <div class="card border-primary border-opacity-25 shadow p-2"
-             style="transform: scale(1.03); background-color: #ffffff;">
+        <div class="card border-primary border-opacity-25 shadow p-2 hero-card"
+             style="transform: scale(1.03);">
             <div class="card-body p-4 p-md-5">
                 <h3 class="fw-bold text-center text-primary-custom mb-2">Accesos Rápidos</h3>
                 <hr class="my-3">
 
                 <div class="d-flex flex-column gap-3">
                     <!-- Botón Nueva Reserva -->
-                    <a href="{% url 'servicios:reserva_nuevo' %}"
+                    <a href="{% url 'servicios:reserva_nuevo' %}?from=landing"
                        class="btn btn-primary py-3 fw-bold fs-5 shadow-sm text-center">
                         Nueva Reserva
                     </a>
 
                     <!-- Botón Nuevo Cliente -->
-                    <a href="{% url 'servicios:cliente_nuevo' %}"
+                    <a href="{% url 'servicios:cliente_nuevo' %}?from=landing"
                        class="btn btn-outline-primary py-3 fw-bold fs-5 text-center">
                         Nuevo Cliente
                     </a>

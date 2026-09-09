@@ -15,7 +15,11 @@
           {% bootstrap_form form %}
 
           <div class="d-flex justify-content-end gap-2 mt-3">
-            <a href="{% url 'servicios:lista_cliente' %}" class="btn btn-secondary w-sm-auto">Cancelar</a>
+            {% if request.GET.from == 'landing' %}
+              <a href="{% url 'home' %}" class="btn btn-secondary w-sm-auto">Cancelar</a>
+            {% else %}
+              <a href="{% url 'servicios:lista_cliente' %}" class="btn btn-secondary w-sm-auto">Cancelar</a>
+            {% endif %}
             {% bootstrap_button button_type="submit" content="Guardar" button_class="btn-primary w-sm-auto" %}
           </div>
         </form>

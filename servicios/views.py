@@ -160,7 +160,10 @@ class ClienteCreateView(CreateView):
     fields = ['nombre' , 'apellido' , 'contacto']
 
     def get_success_url(self):
-        return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
+        origen = self.request.GET.get('from')
+        if origen == 'landing':
+            return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
+        return reverse_lazy('servicios:lista_cliente')
 
 class CoordinadorCreateView(CreateView):
     model = Coordinador
@@ -177,8 +180,13 @@ class EmpleadoCreateView(CreateView):
 class ReservaCreateView(CreateView):
     model = ReservaServicios
     template_name = 'servicios/form_reserva.html'
-    success_url = reverse_lazy('servicios:lista_reservas')
     fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
+
+    def get_success_url(self):
+        origen = self.request.GET.get('from')
+        if origen == 'landing':
+            return reverse_lazy('home')
+        return reverse_lazy('servicios:lista_reservas')
 
     def get_initial(self):
         initial = super().get_initial()
@@ -194,12 +202,22 @@ class ReservaCreateView(CreateView):
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
         return custom_form(form)
+
+    def form_valid(self, form):
+        fecha = form.cleaned_data.get('fecha_servicio')
+        if fecha and fecha < timezone.now():
+            form.add_error('fecha_servicio', 'La fecha y hora de la reserva no puede ser anterior a la actual.')
+            return self.form_invalid(form)
+        return super().form_valid(form)
     
 def custom_form(form):
+    ahora = timezone.now().strftime('%Y-%m-%dT%H:%M')
+
     form.fields['fecha_servicio'].widget = DateTimeInput(
         attrs={
             'type' : 'datetime-local',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'min' : ahora,
         }
     )
 
