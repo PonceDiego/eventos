@@ -52,3 +52,8 @@ class ObjetivoVentaAdmin(admin.ModelAdmin):
     list_display = ('servicio', 'meta', 'activo')
     search_fields = ('servicio__nombre',)
     list_filter = ('activo',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "servicio":
+            kwargs["queryset"] = Servicio.objects.filter(activo=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

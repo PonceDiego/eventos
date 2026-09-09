@@ -194,12 +194,22 @@ class ReservaCreateView(CreateView):
     def get_form(self, form_class = None):
         form = super().get_form(form_class)
         return custom_form(form)
+
+    def form_valid(self, form):
+        fecha = form.cleaned_data.get('fecha_servicio')
+        if fecha and fecha < timezone.now():
+            form.add_error('fecha_servicio', 'La fecha y hora de la reserva no puede ser anterior a la actual.')
+            return self.form_invalid(form)
+        return super().form_valid(form)
     
 def custom_form(form):
+    ahora = timezone.now().strftime('%Y-%m-%dT%H:%M')
+
     form.fields['fecha_servicio'].widget = DateTimeInput(
         attrs={
             'type' : 'datetime-local',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'min' : ahora,
         }
     )
 
