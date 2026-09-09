@@ -160,7 +160,10 @@ class ClienteCreateView(CreateView):
     fields = ['nombre' , 'apellido' , 'contacto']
 
     def get_success_url(self):
-        return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
+        origen = self.request.GET.get('from')
+        if origen == 'landing':
+            return reverse_lazy('servicios:reserva_nuevo') + f'?cliente_id={self.object.pk}'
+        return reverse_lazy('servicios:lista_cliente')
 
 class CoordinadorCreateView(CreateView):
     model = Coordinador
@@ -177,8 +180,12 @@ class EmpleadoCreateView(CreateView):
 class ReservaCreateView(CreateView):
     model = ReservaServicios
     template_name = 'servicios/form_reserva.html'
-    success_url = reverse_lazy('servicios:lista_reservas')
     fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['desde_landing'] = self.request.GET.get('from') == 'landing'
+        return context
 
     def get_initial(self):
         initial = super().get_initial()

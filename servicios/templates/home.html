@@ -145,13 +145,13 @@
 
                 <div class="d-flex flex-column gap-3">
                     <!-- Botón Nueva Reserva -->
-                    <a href="{% url 'servicios:reserva_nuevo' %}"
+                    <a href="{% url 'servicios:reserva_nuevo' %}?from=landing"
                        class="btn btn-primary py-3 fw-bold fs-5 shadow-sm text-center">
                         Nueva Reserva
                     </a>
 
                     <!-- Botón Nuevo Cliente -->
-                    <a href="{% url 'servicios:cliente_nuevo' %}"
+                    <a href="{% url 'servicios:cliente_nuevo' %}?from=landing"
                        class="btn btn-outline-primary py-3 fw-bold fs-5 text-center">
                         Nuevo Cliente
                     </a>
