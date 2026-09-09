@@ -182,10 +182,11 @@ class ReservaCreateView(CreateView):
     template_name = 'servicios/form_reserva.html'
     fields = ['cliente', 'servicio', 'empleado', 'coordinador', 'fecha_servicio']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['desde_landing'] = self.request.GET.get('from') == 'landing'
-        return context
+    def get_success_url(self):
+        origen = self.request.GET.get('from')
+        if origen == 'landing':
+            return reverse_lazy('home')
+        return reverse_lazy('servicios:lista_reservas')
 
     def get_initial(self):
         initial = super().get_initial()
